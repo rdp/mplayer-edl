@@ -1490,8 +1490,11 @@ double demuxer_get_current_time(demuxer_t *demuxer)
     if (demuxer->stream_pts != MP_NOPTS_VALUE)
 	{
        get_time_ans = demuxer->stream_pts;	   
+       get_time_ans *= 1.001; // convert to 29.97 fps, mplayer's golden standard :P // could do this within libdvdnav uh guess...possibly all of it...
 	   if(get_time_ans != last_dvd_update_pos) {
 	     // got a new NAV packet
+         if (osd_verbose)
+           printf("new NAV packet! %f [already adjusted] at %f ", get_time_ans, sh_video->pts);
          last_dvd_update_pos = get_time_ans;
          last_stream_pos_at_that_dvd_time = sh_video->pts;
        } else {
@@ -1499,13 +1502,21 @@ double demuxer_get_current_time(demuxer_t *demuxer)
          double time_since_last_nav_packet = sh_video->pts - last_stream_pos_at_that_dvd_time;
          if(time_since_last_nav_packet > 0 && time_since_last_nav_packet < 1.5) { // should never exceed 1.5s, typically <= 0.4
            get_time_ans += time_since_last_nav_packet;
+		    if (osd_verbose)
+               printf("adding difference %f ", time_since_last_nav_packet);
          } else {
-           last_stream_pos_at_that_dvd_time = sh_video->pts;
+          printf("not adding odd diff1? is this a skip? %f", time_since_last_nav_packet); // skips maybe?
+          last_stream_pos_at_that_dvd_time = sh_video->pts;
          }
        }
+	   
 	}
-    else if (sh_video)
+    else if (sh_video) {
         get_time_ans = sh_video->pts;
+         printf("weird fella suddenly we're not a DVD? mpeg at %f ", sh_video->pts);
+         // we get here at the mpeg "splits" cross overs splits...
+	}
+
     return get_time_ans;
 }
 
