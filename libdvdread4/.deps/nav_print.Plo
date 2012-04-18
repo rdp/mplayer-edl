@@ -1,0 +1,39 @@
+nav_print.lo: nav_print.c \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdio.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/_mingw.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stddef.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stdarg.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/sys/types.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/inttypes.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stdint.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdint.h \
+ dvdread/nav_types.h dvdread/ifo_types.h dvdread/dvd_reader.h \
+ dvdread/nav_print.h dvdread/nav_types.h dvdread/ifo_print.h
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdio.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/_mingw.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stddef.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stdarg.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/sys/types.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/inttypes.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stdint.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdint.h:
+
+dvdread/nav_types.h:
+
+dvdread/ifo_types.h:
+
+dvdread/dvd_reader.h:
+
+dvdread/nav_print.h:
+
+dvdread/nav_types.h:
+
+dvdread/ifo_print.h:
