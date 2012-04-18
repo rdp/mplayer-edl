@@ -1474,6 +1474,8 @@ double demuxer_get_time_length(demuxer_t *demuxer)
     return get_time_ans;
 }
 
+static double last_dvd_update_pos = 0.0;
+static double last_stream_pos_at_that_dvd_time = 0.0;
 /**
  * \brief demuxer_get_current_time() returns the time of the current play in three possible ways:
  *        either when the stream reader satisfies STREAM_CTRL_GET_CURRENT_TIME (e.g. dvd)
