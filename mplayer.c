@@ -1590,12 +1590,13 @@ static void update_osd_msg(void)
             double pts = demuxer_get_current_time(mpctx->demuxer);
             int pts_seconds = pts;
             if(osd_verbose)
-               printf("adding %f to %f \n", osd_add_this_much, pts);
+               printf("adding %f to %f with pts %f %is\n", osd_add_this_much, pts, pts, pts_seconds);
              pts += osd_add_this_much;
              if(osd_verbose)
                printf("final: %f\n", pts);
              if((pts - 1.0) < mpctx->sh_video->pts) {
-               //printf("using mpeg ts appears larger, which if true is definitely better %f > %f - 1.0\n", mpctx->sh_video->pts, pts);
+              if(osd_verbose)
+                 printf("using mpeg ts appears larger, which if true is definitely better %f > %f - 1.0\n", mpctx->sh_video->pts, pts);
 			   pts = mpctx->sh_video->pts;
                if(osd_add_this_much > 0) {
                  snprintf(osd_accuracy_level, 100, "EDL-high-DVD-accurate");
