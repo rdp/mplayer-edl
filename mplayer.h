@@ -27,6 +27,8 @@ extern char **video_driver_list;
 extern char **audio_driver_list;
 
 extern int osd_level;
+extern float osd_add_this_much;
+extern int osd_verbose;
 extern unsigned int osd_visible;
 extern int autosync;
 extern int frame_dropping;

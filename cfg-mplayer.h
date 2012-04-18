@@ -86,6 +86,7 @@ const m_option_t mplayer_opts[]={
     {"softvol", &soft_vol, CONF_TYPE_FLAG, 0, 0, 1, NULL},
     {"nosoftvol", &soft_vol, CONF_TYPE_FLAG, 0, 1, 0, NULL},
     {"softvol-max", &soft_vol_max, CONF_TYPE_FLOAT, CONF_RANGE, 10, 10000, NULL},
+//    {"add-osd", &add_this_much, CONF_TYPE_FLOAT, CONF_RANGE, 0, 10000, NULL},
     {"volstep", &volstep, CONF_TYPE_INT, CONF_RANGE, 0, 100, NULL},
     {"volume", &start_volume, CONF_TYPE_FLOAT, CONF_RANGE, -1, 10000, NULL},
     {"master", "Option -master has been removed, use -af volume instead.\n", CONF_TYPE_PRINT, 0, 0, 0, NULL},
@@ -233,7 +234,11 @@ const m_option_t mplayer_opts[]={
     {"crash-debug", &crash_debug, CONF_TYPE_FLAG, CONF_GLOBAL, 0, 1, NULL},
     {"nocrash-debug", &crash_debug, CONF_TYPE_FLAG, CONF_GLOBAL, 1, 0, NULL},
 #endif
+//    {"osd-add-this-much", &osd_add_this_much, CONF_TYPE_FLOAT, CONF_RANGE, 0, 10000, NULL},
     {"osdlevel", &osd_level, CONF_TYPE_INT, CONF_RANGE, 0, 3, NULL},
+    {"osd-add", &osd_add_this_much, CONF_TYPE_FLOAT, CONF_RANGE, -100.0, 100.0, NULL},
+    {"osd-verbose", &osd_verbose,  CONF_TYPE_FLAG, CONF_GLOBAL, 0, 1, NULL},
+    
     {"osd-duration", &osd_duration, CONF_TYPE_INT, CONF_MIN, 0, 0, NULL},
     {"osd-fractions", &osd_fractions, CONF_TYPE_INT, CONF_RANGE, 0, 2, NULL},
 #ifdef CONFIG_MENU

@@ -302,7 +302,7 @@ static int seek(stream_t *s, off_t newpos) {
 fail:
   mp_msg(MSGT_STREAM,MSGL_INFO,"dvdnav_stream, seeking to %"PRIu64" failed: %s\n", newpos, dvdnav_err_to_string(priv->dvdnav));
 
-  return 1;
+  return 0;
 }
 
 static void stream_dvdnav_close(stream_t *s) {
@@ -468,7 +468,8 @@ static int control(stream_t *stream, int cmd, void* arg) {
     case STREAM_CTRL_SEEK_TO_TIME:
     {
       uint64_t tm = *(double *)arg * 90000;
-      if(dvdnav_time_search(priv->dvdnav, tm) == DVDNAV_STATUS_OK)
+      printf("\njumping to %d", tm);
+      if(dvdnav_jump_to_sector_by_time(priv->dvdnav, tm) == DVDNAV_STATUS_OK)
         return 1;
       break;
     }

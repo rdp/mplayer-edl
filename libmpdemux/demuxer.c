@@ -494,7 +494,6 @@ static void allocate_parser(AVCodecContext **avctx, AVCodecParserContext **parse
         //codec_id = CODEC_ID_DNET;
         break;
     case MKTAG('E', 'A', 'C', '3'):
-    case MKTAG('e', 'c', '-', '3'):
         codec_id = CODEC_ID_EAC3;
         break;
     case 0x2001:
@@ -1474,6 +1473,9 @@ double demuxer_get_time_length(demuxer_t *demuxer)
     return get_time_ans;
 }
 
+int osd_verbose = 0;
+double last_dvd_update_pos = 0;
+double last_stream_pos_at_that_dvd_time = 0;
 /**
  * \brief demuxer_get_current_time() returns the time of the current play in three possible ways:
  *        either when the stream reader satisfies STREAM_CTRL_GET_CURRENT_TIME (e.g. dvd)

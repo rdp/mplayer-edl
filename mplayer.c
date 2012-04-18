@@ -144,6 +144,7 @@ int quiet;
 int enable_mouse_movements;
 float start_volume = -1;
 double start_pts   = MP_NOPTS_VALUE;
+float osd_add_this_much = 0.0;
 char *heartbeat_cmd;
 static int max_framesize;
 
@@ -1227,7 +1228,7 @@ static void print_status(float a_pos, float a_v, float corr)
 
     // Video time
     if (sh_video)
-        saddf(line, &pos, width, "V:%6.1f ", sh_video->pts);
+        saddf(line, &pos, width, "V:%6.2f ", sh_video->pts);
 
     // A-V sync
     if (mpctx->sh_audio && sh_video)
@@ -1576,6 +1577,8 @@ static void update_osd_msg(void)
         }
         return;
     }
+	
+	char osd_accuracy_level[128] = "";
 
     if (mpctx->sh_video) {
         // fallback on the timer
@@ -1586,6 +1589,33 @@ static void update_osd_msg(void)
             char fractions_text[4];
             double pts = demuxer_get_current_time(mpctx->demuxer);
             int pts_seconds = pts;
+            if(osd_verbose)
+               printf("adding %f to %f \n", osd_add_this_much, pts);
+             pts += osd_add_this_much;
+             if(osd_verbose)
+               printf("final: %f\n", pts);
+             if((pts - 1.0) < mpctx->sh_video->pts) {
+               //printf("using mpeg ts appears larger, which if true is definitely better %f > %f - 1.0\n", mpctx->sh_video->pts, pts);
+			   pts = mpctx->sh_video->pts;
+               if(osd_add_this_much > 0) {
+                 snprintf(osd_accuracy_level, 100, "EDL-high-DVD-accurate");
+               } else {
+                 if(mpctx->sh_video->pts == pts) {
+                   snprintf(osd_accuracy_level, 100, "EDL-high-File-accurate");
+                 } else {
+                   snprintf(osd_accuracy_level, 100, "EDL-high-DVD-accurate");
+                }
+               }
+               
+             } else {
+               // typically only DVD gets here...
+               // hmm...
+               if(osd_add_this_much > 0) {
+                 snprintf(osd_accuracy_level, 100,"EDL-medium-DVD-accurate");
+               } else {
+                 snprintf(osd_accuracy_level, 100,"EDL-low-DVD-accurate");
+               }
+             }
 
             if (mpctx->osd_show_percentage)
                 percentage = demuxer_get_percent_pos(mpctx->demuxer);
@@ -1618,8 +1648,8 @@ static void update_osd_msg(void)
 
             if (osd_level == 3)
                 snprintf(osd_text_timer, 63,
-                         "%c %02d:%02d:%02d%s / %02d:%02d:%02d%s",
-                         mpctx->osd_function, pts_seconds / 3600, (pts_seconds / 60) % 60, pts_seconds % 60,
+                         "%s:%c %02d:%02d:%02d%s / %02d:%02d:%02d%s",
+                         osd_accuracy_level, mpctx->osd_function, pts_seconds / 3600, (pts_seconds / 60) % 60, pts_seconds % 60,
                          fractions_text, len / 3600, (len / 60) % 60, len % 60,
                          percentage_text);
             else
@@ -1643,7 +1673,6 @@ static void update_osd_msg(void)
     // Clear the term osd line
     if (term_osd && osd_text[0]) {
         osd_text[0] = 0;
-        printf("%s\n", term_osd_esc);
     }
 }
 
@@ -2596,6 +2625,7 @@ static void edl_loadfile(void)
 }
 
 // Execute EDL command for the current position if one exists
+// this is where the "muting" or "skipping" actually occurs
 static void edl_update(MPContext *mpctx)
 {
     if (!edl_records)
@@ -2608,7 +2638,7 @@ static void edl_update(MPContext *mpctx)
         edl_records     = NULL;
         return;
     }
-
+     double pts = demuxer_get_current_time(mpctx->demuxer);
     // This indicates that we need to reset next EDL record according
     // to new PTS due to seek or other condition
     if (edl_needs_reset) {
@@ -2619,22 +2649,22 @@ static void edl_update(MPContext *mpctx)
         // Find next record, also skip immediately if we are already
         // inside any record
         while (next_edl_record) {
-            if (next_edl_record->start_sec > mpctx->sh_video->pts)
+            if (next_edl_record->start_sec > pts)
                 break;
-            if (next_edl_record->stop_sec >= mpctx->sh_video->pts) {
+            if (next_edl_record->stop_sec >= pts) {
                 if (edl_backward) {
+                   // this is just for "after some seek, check if we're in an EDL"
                     mpctx->osd_function = OSD_REW;
                     edl_decision  = 1;
                     abs_seek_pos  = 0;
-                    rel_seek_secs = -(mpctx->sh_video->pts -
+                    rel_seek_secs = -(pts -
                                       next_edl_record->start_sec +
                                       edl_backward_delay);
-                    mp_msg(MSGT_CPLAYER, MSGL_DBG4, "EDL_SKIP: pts [%f], "
-                                                    "offset [%f], start [%f], stop [%f], length [%f]\n",
-                           mpctx->sh_video->pts, rel_seek_secs,
+                    printf( "\nEDL_SKIP special: pts [%f], offset [%f], start [%f], stop [%f], length [%f]\n",
+                           pts, rel_seek_secs,
                            next_edl_record->start_sec, next_edl_record->stop_sec,
                            next_edl_record->length_sec);
-                    return;
+                    return; // early return
                 }
                 break;
             }
@@ -2649,15 +2679,16 @@ static void edl_update(MPContext *mpctx)
     }
 
     if (next_edl_record &&
-        mpctx->sh_video->pts >= next_edl_record->start_sec) {
+        pts >= next_edl_record->start_sec) {
         if (next_edl_record->action == EDL_SKIP) {
             mpctx->osd_function = OSD_FFW;
             edl_decision  = 1;
             abs_seek_pos  = 0;
-            rel_seek_secs = next_edl_record->stop_sec - mpctx->sh_video->pts;
+            rel_seek_secs = next_edl_record->stop_sec - pts;
+            printf("\n\nEDL rel seek secs %f %f [%f,%f] \n", rel_seek_secs, pts,  next_edl_record->start_sec, next_edl_record->stop_sec);
             mp_msg(MSGT_CPLAYER, MSGL_DBG4, "EDL_SKIP: pts [%f], offset [%f], "
                                             "start [%f], stop [%f], length [%f]\n",
-                   mpctx->sh_video->pts, rel_seek_secs,
+                   pts, rel_seek_secs,
                    next_edl_record->start_sec, next_edl_record->stop_sec,
                    next_edl_record->length_sec);
         } else if (next_edl_record->action == EDL_MUTE) {
@@ -3883,6 +3914,7 @@ goto_enable_cache:
 
             edl_update(mpctx);
 
+
 //================= Keyboard events, SEEKing ====================
 
             current_module = "key_events";
@@ -3966,7 +3998,7 @@ goto_enable_cache:
                     guiInfo.Chapter = dvd_chapter_from_cell(dvdp, guiInfo.Track - 1, dvdp->cur_cell) + 1;
                 }
 #endif
-            }
+          } // if use_gui
 #endif /* CONFIG_GUI */
         } // while(!mpctx->eof)
 

@@ -388,6 +388,14 @@ dvdnav_status_t dvdnav_time_search(dvdnav_t *self,
 				   uint64_t time);
 
 /*
+ * Find the nearest vobu and jump to it
+ *
+ * Alternative to dvdnav_time_search
+ */
+dvdnav_status_t dvdnav_jump_to_sector_by_time(dvdnav_t *this,
+            uint64_t time_in_pts_ticks);
+
+/*
  * Stop playing current position and play the "GoUp"-program chain.
  * (which generally leads to the title menu or a higher-level menu).
  */
