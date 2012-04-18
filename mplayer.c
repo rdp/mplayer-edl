@@ -2644,7 +2644,7 @@ static void edl_update(MPContext *mpctx)
                 break;
             if (next_edl_record->stop_sec >= pts) {
                 if (edl_backward) {
-                   // this is just for "after some seek, check if we're in an EDL"
+                   // this is just for "after some seek, check if we're in an EDL" we don't really get here I don't believe...
                     mpctx->osd_function = OSD_REW;
                     edl_decision  = 1;
                     abs_seek_pos  = 0;
@@ -2676,6 +2676,8 @@ static void edl_update(MPContext *mpctx)
             edl_decision  = 1;
             abs_seek_pos  = 0;
             rel_seek_secs = next_edl_record->stop_sec - pts;
+			// 0.151834 can mean that we're stuck in an infinite loop [see ML]
+			rel_seek_secs = max(0.2, rel_seek_secs);
             printf("\n\nEDL rel seek secs %f %f [%f,%f] \n", rel_seek_secs, pts,  next_edl_record->start_sec, next_edl_record->stop_sec);
             mp_msg(MSGT_CPLAYER, MSGL_DBG4, "EDL_SKIP: pts [%f], offset [%f], "
                                             "start [%f], stop [%f], length [%f]\n",
