@@ -1476,6 +1476,8 @@ double demuxer_get_time_length(demuxer_t *demuxer)
 int osd_verbose = 0;
 double last_dvd_update_pos = 0;
 double last_stream_pos_at_that_dvd_time = 0;
+float osd_add_this_much = 0.0;
+
 /**
  * \brief demuxer_get_current_time() returns the time of the current play in three possible ways:
  *        either when the stream reader satisfies STREAM_CTRL_GET_CURRENT_TIME (e.g. dvd)
@@ -1516,8 +1518,22 @@ double demuxer_get_current_time(demuxer_t *demuxer)
          printf("weird fella suddenly we're not a DVD? mpeg at %f ", sh_video->pts);
          // we get here at the mpeg "splits" cross overs splits...
 	}
-
-    return get_time_ans;
+	
+	// now morph it to "match" file times LOL
+	
+	double pts = get_time_ans;
+	if(osd_verbose)
+      printf("adding %f to %f with pts %f\n", osd_add_this_much, pts, pts);
+    get_time_ans += osd_add_this_much;
+    if(osd_verbose)
+       printf("final: %f\n", pts);
+    if((pts - 1.0) < sh_video->pts) {
+              if(osd_verbose)
+                 printf("using mpeg ts appears larger, which if true is definitely better %f > %f - 1.0\n", sh_video->pts, pts);
+			pts = sh_video->pts;
+	}
+    
+    return pts;
 }
 
 int demuxer_get_percent_pos(demuxer_t *demuxer)
