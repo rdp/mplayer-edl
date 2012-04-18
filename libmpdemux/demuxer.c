@@ -1486,7 +1486,22 @@ double demuxer_get_current_time(demuxer_t *demuxer)
     double get_time_ans = 0;
     sh_video_t *sh_video = demuxer->video->sh;
     if (demuxer->stream_pts != MP_NOPTS_VALUE)
-        get_time_ans = demuxer->stream_pts;
+	{
+       get_time_ans = demuxer->stream_pts;	   
+	   if(get_time_ans != last_dvd_update_pos) {
+	     // got a new NAV packet
+         last_dvd_update_pos = get_time_ans;
+         last_stream_pos_at_that_dvd_time = sh_video->pts;
+       } else {
+	     // make return value more precise by adding in time elapsed since NAV packet
+         double time_since_last_nav_packet = sh_video->pts - last_stream_pos_at_that_dvd_time;
+         if(time_since_last_nav_packet > 0 && time_since_last_nav_packet < 1.5) { // should never exceed 1.5s, typically <= 0.4
+           get_time_ans += time_since_last_nav_packet;
+         } else {
+           last_stream_pos_at_that_dvd_time = sh_video->pts;
+         }
+       }
+	}
     else if (sh_video)
         get_time_ans = sh_video->pts;
     return get_time_ans;
