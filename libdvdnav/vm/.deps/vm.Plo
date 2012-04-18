@@ -1,0 +1,242 @@
+vm.lo: vm.c ../../config.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdio.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/_mingw.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stddef.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stdarg.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/sys/types.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/string.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdlib.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/unistd.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/io.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/process.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stdint.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdint.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/getopt.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/inttypes.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/limits.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/assert.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/sys/stat.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/sys/time.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/time.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/fcntl.h \
+ g:/installs/mingw-raw/msys/1.0/local/include/dvdread/nav_types.h \
+ g:/installs/mingw-raw/msys/1.0/local/include/dvdread/ifo_types.h \
+ g:/installs/mingw-raw/msys/1.0/local/include/dvdread/dvd_reader.h \
+ g:/installs/mingw-raw/msys/1.0/local/include/dvdread/ifo_types.h \
+ g:/installs/mingw-raw/msys/1.0/local/include/dvdread/ifo_read.h \
+ ../../src/dvdnav/dvdnav.h ../../src/dvdnav/dvd_types.h \
+ ../../src/dvdnav/dvdnav_events.h decoder.h ../../src/remap.h vm.h \
+ ../../src/dvdnav_internal.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/windows.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/windef.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winnt.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winerror.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/basetsd.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/pshpack4.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/poppack.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/wincon.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winbase.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/wingdi.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winuser.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winnls.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winver.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winnetwk.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winreg.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winsvc.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/cderr.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/dde.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/ddeml.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/dlgs.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/imm.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/lzexpand.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/mmsystem.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/nb30.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/rpc.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/rpcdce.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/basetyps.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/rpcdcep.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/rpcnsi.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/rpcnterr.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/shellapi.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/pshpack2.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winperf.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/commdlg.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winspool.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winsock2.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/ole2.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/objbase.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/rpcndr.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/rpcnsip.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/objfwd.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/wtypes.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/unknwn.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/objidl.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/cguid.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/olectlid.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/oleauto.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/oaidl.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/oleidl.h
+
+../../config.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdio.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/_mingw.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stddef.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stdarg.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/sys/types.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/string.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdlib.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/unistd.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/io.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/process.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stdint.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdint.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/getopt.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/inttypes.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/limits.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/assert.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/sys/stat.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/sys/time.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/time.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/fcntl.h:
+
+g:/installs/mingw-raw/msys/1.0/local/include/dvdread/nav_types.h:
+
+g:/installs/mingw-raw/msys/1.0/local/include/dvdread/ifo_types.h:
+
+g:/installs/mingw-raw/msys/1.0/local/include/dvdread/dvd_reader.h:
+
+g:/installs/mingw-raw/msys/1.0/local/include/dvdread/ifo_types.h:
+
+g:/installs/mingw-raw/msys/1.0/local/include/dvdread/ifo_read.h:
+
+../../src/dvdnav/dvdnav.h:
+
+../../src/dvdnav/dvd_types.h:
+
+../../src/dvdnav/dvdnav_events.h:
+
+decoder.h:
+
+../../src/remap.h:
+
+vm.h:
+
+../../src/dvdnav_internal.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/windows.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/windef.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winnt.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winerror.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/basetsd.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/pshpack4.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/poppack.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/wincon.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winbase.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/wingdi.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winuser.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winnls.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winver.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winnetwk.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winreg.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winsvc.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/cderr.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/dde.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/ddeml.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/dlgs.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/imm.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/lzexpand.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/mmsystem.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/nb30.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/rpc.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/rpcdce.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/basetyps.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/rpcdcep.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/rpcnsi.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/rpcnterr.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/shellapi.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/pshpack2.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winperf.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/commdlg.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winspool.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/winsock2.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/ole2.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/objbase.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/rpcndr.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/rpcnsip.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/objfwd.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/wtypes.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/unknwn.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/objidl.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/cguid.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/olectlid.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/oleauto.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/oaidl.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/oleidl.h:
