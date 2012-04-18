@@ -2677,7 +2677,7 @@ static void edl_update(MPContext *mpctx)
             abs_seek_pos  = 0;
             rel_seek_secs = next_edl_record->stop_sec - pts;
 			// 0.151834 can mean that we're stuck in an infinite loop [see ML]
-			rel_seek_secs = max(0.2, rel_seek_secs);
+			rel_seek_secs = max(0.25, rel_seek_secs);
             printf("\n\nEDL rel seek secs %f %f [%f,%f] \n", rel_seek_secs, pts,  next_edl_record->start_sec, next_edl_record->stop_sec);
             mp_msg(MSGT_CPLAYER, MSGL_DBG4, "EDL_SKIP: pts [%f], offset [%f], "
                                             "start [%f], stop [%f], length [%f]\n",
