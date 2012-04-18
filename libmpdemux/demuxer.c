@@ -1507,7 +1507,7 @@ double demuxer_get_current_time(demuxer_t *demuxer)
 		    if (osd_verbose)
                printf("adding difference %f ", time_since_last_nav_packet);
          } else {
-          printf("not adding odd diff1? is this a skip? %f", time_since_last_nav_packet); // skips maybe?
+          printf("not adding odd diff1? (skip) %f", time_since_last_nav_packet);
           last_stream_pos_at_that_dvd_time = sh_video->pts;
          }
        }
