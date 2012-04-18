@@ -1,0 +1,56 @@
+dvd_udf.lo: dvd_udf.c \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdio.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/_mingw.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stddef.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stdarg.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/sys/types.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdlib.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/string.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/sys/stat.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/unistd.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/io.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/process.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stdint.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdint.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/getopt.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/inttypes.h \
+ dvdread_internal.h dvdread/dvd_reader.h dvdread/dvd_udf.h \
+ dvdread/dvd_reader.h
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdio.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/_mingw.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stddef.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stdarg.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/sys/types.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdlib.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/string.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/sys/stat.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/unistd.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/io.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/process.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stdint.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdint.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/getopt.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/inttypes.h:
+
+dvdread_internal.h:
+
+dvdread/dvd_reader.h:
+
+dvdread/dvd_udf.h:
+
+dvdread/dvd_reader.h:

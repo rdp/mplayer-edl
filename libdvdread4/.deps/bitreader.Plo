@@ -1,0 +1,34 @@
+bitreader.lo: bitreader.c \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdio.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/_mingw.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stddef.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stdarg.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/sys/types.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdlib.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/string.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/inttypes.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stdint.h \
+ g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdint.h \
+ dvdread/bitreader.h
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdio.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/_mingw.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stddef.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stdarg.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/sys/types.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdlib.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/string.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/inttypes.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/include/stdint.h:
+
+g:\installs\mingw-raw\bin\../lib/gcc/mingw32/4.6.1/../../../../include/stdint.h:
+
+dvdread/bitreader.h:
