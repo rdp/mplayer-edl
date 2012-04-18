@@ -1595,7 +1595,7 @@ static void update_osd_msg(void)
 			    snprintf(osd_accuracy_level, 100, "EDL-high-DVD-accurate");
 			  } else {
 			    if(osd_add_this_much > 0) {
-			      snprintf(osd_accuracy_level, 100, "EDL-medium-DVD-accurate");
+			      snprintf(osd_accuracy_level, 100, "EDL-med-DVD-accurate");
 				} else {
 				  snprintf(osd_accuracy_level, 100, "EDL-low-DVD-accurate");
 				}
