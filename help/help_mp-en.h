@@ -196,7 +196,7 @@ static const char help_text[]=
 #define MSGTR_EdlQueueEmpty "There are no EDL actions to take care of.\n"
 #define MSGTR_EdlCantOpenForWrite "Can't open EDL file [%s] for writing.\n"
 #define MSGTR_EdlCantOpenForRead "Can't open EDL file [%s] for reading.\n"
-#define MSGTR_EdlNOsh_video "Cannot use EDL without video, disabling.\n"
+#define MSGTR_EdlNOsh_video "Cannot use EDL without either video or audio, disabling.\n"
 #define MSGTR_EdlNOValidLine "Invalid EDL line: %s\n"
 #define MSGTR_EdlBadlyFormattedLine "Badly formatted EDL line [%d], discarding.\n"
 #define MSGTR_EdlBadLineOverlap "Last stop position was [%f]; next start is [%f].\n"\

@@ -2598,10 +2598,15 @@ static void edl_loadfile(void)
 // Execute EDL command for the current position if one exists
 static void edl_update(MPContext *mpctx)
 {
+    double pts;
     if (!edl_records)
         return;
 
-    if (!mpctx->sh_video) {
+    if(mpctx->sh_video)
+      pts = demuxer_get_current_time(mpctx->demuxer);
+    else if (mpctx->sh_audio)
+      pts = playing_audio_pts(mpctx->sh_audio, mpctx->d_audio, mpctx->audio_out);
+    else {
         mp_msg(MSGT_CPLAYER, MSGL_ERR, MSGTR_EdlNOsh_video);
         free_edl(edl_records);
         next_edl_record = NULL;
@@ -2609,7 +2614,6 @@ static void edl_update(MPContext *mpctx)
         return;
     }
 	
-    double pts = demuxer_get_current_time(mpctx->demuxer);	
     // This indicates that we need to reset next EDL record according
     // to new PTS due to seek or other condition
     if (edl_needs_reset) {

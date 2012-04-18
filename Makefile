@@ -783,8 +783,8 @@ all: $(ALL_PRG-yes)
 %-rc.o: %.rc
 	$(WINDRES) -I. $< -o $@
 
-$(FFMPEGLIBS): $(FFMPEGFILES) config.h
-	$(MAKE) -C ffmpeg $(@:ffmpeg/%=%)
+#$(FFMPEGLIBS): $(FFMPEGFILES) config.h
+	#$(MAKE) -C ffmpeg $(@:ffmpeg/%=%)
 
 mencoder$(EXESUF): $(MENCODER_DEPS)
 mencoder$(EXESUF): EXTRALIBS += $(EXTRALIBS_MENCODER)
