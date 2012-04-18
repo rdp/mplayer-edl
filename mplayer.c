@@ -1589,27 +1589,21 @@ static void update_osd_msg(void)
             char fractions_text[4];
             double pts = demuxer_get_current_time(mpctx->demuxer);
             int pts_seconds = pts;
-			if(pts == mpctx->sh_video->pts + osd_add_this_much) {
-               if(osd_add_this_much > 0) {
-                 snprintf(osd_accuracy_level, 100, "EDL-high-DVD-accurate");
-               } else {
-			     // this assumes we set osd-add intelligently...
-                 if(mpctx->sh_video->pts == pts) {
-                   snprintf(osd_accuracy_level, 100, "EDL-high-File-accurate");
-                 } else {
-                   snprintf(osd_accuracy_level, 100, "EDL-high-DVD-accurate");
-                }
-               }               
-             } else {
-               // typically only DVD gets here...
-               // hmm...
-               if(osd_add_this_much > 0) {
-                 snprintf(osd_accuracy_level, 100,"EDL-medium-DVD-accurate");
-               } else {
-                 snprintf(osd_accuracy_level, 100,"EDL-low-DVD-accurate");
-               }
-             }
-
+			if(mpctx->demuxer->stream_pts != MP_NOPTS_VALUE) {
+			  // DVD
+			  if(pts == mpctx->sh_video->pts + osd_add_this_much) {
+			    snprintf(osd_accuracy_level, 100, "EDL-high-DVD-accurate");
+			  } else {
+			    if(osd_add_this_much > 0) {
+			      snprintf(osd_accuracy_level, 100, "EDL-medium-DVD-accurate");
+				} else {
+				  snprintf(osd_accuracy_level, 100, "EDL-low-DVD-accurate");
+				}
+			  }
+			} else {
+			  snprintf(osd_accuracy_level, 100, "EDL-high-File-accurate"); // hope they're accurate...typically I...think...they are
+			}
+			
             if (mpctx->osd_show_percentage)
                 percentage = demuxer_get_percent_pos(mpctx->demuxer);
 
