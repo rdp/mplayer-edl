@@ -1491,7 +1491,10 @@ double demuxer_get_current_time(demuxer_t *demuxer)
     sh_video_t *sh_video = demuxer->video->sh;
     if (demuxer->stream_pts != MP_NOPTS_VALUE)
 	{
-       get_time_ans = demuxer->stream_pts;	   
+       get_time_ans = demuxer->stream_pts;
+       if (osd_verbose)
+         printf("\nlast NAV packet was %f, mpeg at %f ", get_time_ans, sh_video->pts);
+	   
        get_time_ans *= 1.001; // convert to 29.97 fps, mplayer's golden standard :P // could do this within libdvdnav uh guess...possibly all of it...
 	   if(get_time_ans != last_dvd_update_pos) {
 	     // got a new NAV packet
