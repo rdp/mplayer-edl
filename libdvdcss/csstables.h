@@ -2,7 +2,7 @@
  * csstables.h: CSS Tables for DVD unscrambling
  *****************************************************************************
  * Copyright (C) 1999-2001 VideoLAN
- * $Id$
+ * $Id: csstables.h 235 2010-08-02 15:41:14Z jb $
  *
  * Author: Stéphane Borel <stef@via.ecp.fr>
  *

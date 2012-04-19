@@ -2,7 +2,7 @@
  * device.h: DVD device access
  *****************************************************************************
  * Copyright (C) 1998-2002 VideoLAN
- * $Id$
+ * $Id: device.h 236 2010-08-02 15:59:13Z jb $
  *
  * Authors: Stéphane Borel <stef@via.ecp.fr>
  *          Sam Hocevar <sam@zoy.org>

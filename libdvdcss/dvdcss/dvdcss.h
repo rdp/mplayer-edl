@@ -10,7 +10,7 @@
 
 /*
  * Copyright (C) 1998-2008 VideoLAN
- * $Id$
+ * $Id: dvdcss.h 219 2009-02-09 00:03:47Z jb $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

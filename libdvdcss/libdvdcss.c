@@ -5,7 +5,7 @@
  *          Håkan Hjort <d95hjort@dtek.chalmers.se>
  *
  * Copyright (C) 1998-2008 VideoLAN
- * $Id$
+ * $Id: libdvdcss.c 237 2010-09-25 14:21:47Z reimar $
  *
  * This library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -366,9 +366,30 @@ LIBDVDCSS_EXPORT dvdcss_t dvdcss_open ( char *psz_target )
 
     if( dvdcss->b_ioctls )
     {
-        _dvdcss_test( dvdcss );
+        i_ret = _dvdcss_test( dvdcss );
+
+        if( i_ret == -3 )
+        {
+            print_debug( dvdcss, "scrambled disc on a region-free RPC-II "
+                                 "drive: possible failure, but continuing "
+                                 "anyway" );
+        }
+        else if( i_ret < 0 )
+        {
+            /* Disable the CSS ioctls and hope that it works? */
+            print_debug( dvdcss,
+                         "could not check whether the disc was scrambled" );
+            dvdcss->b_ioctls = 0;
+        }
+        else
+        {
+            print_debug( dvdcss, i_ret ? "disc is scrambled"
+                                       : "disc is unscrambled" );
+            dvdcss->b_scrambled = i_ret;
+        }
     }
 
+    memset( dvdcss->css.p_disc_key, 0, KEY_SIZE );
     /* If disc is CSS protected and the ioctls work, authenticate the drive */
     if( dvdcss->b_scrambled && dvdcss->b_ioctls )
     {
@@ -378,10 +399,6 @@ LIBDVDCSS_EXPORT dvdcss_t dvdcss_open ( char *psz_target )
         {
             print_debug( dvdcss, "could not get disc key" );
         }
-    }
-    else
-    {
-        memset( dvdcss->css.p_disc_key, 0, KEY_SIZE );
     }
 
     /* If the cache is enabled, write the cache directory tag */
