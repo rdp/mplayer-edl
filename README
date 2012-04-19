@@ -4,6 +4,7 @@ MPlayer currently works best from the command line, but visual feedback for
 many functions is available from its onscreen status display (OSD), which is
 also used for displaying subtitles. MPlayer also has a GUI with skin support and
 several unofficial alternative graphical frontends are available.
+With some DVD fixes.
 
 MEncoder is a command line video encoder for advanced users that can be built
 from the MPlayer source tree. Unofficial graphical frontends exist but are
