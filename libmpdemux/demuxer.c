@@ -1487,6 +1487,7 @@ float osd_add_this_much = 0.0;
  */
 double demuxer_get_current_time(demuxer_t *demuxer)
 {
+    // this method only gets called if EDL or OSD is on
     double get_time_ans = 0;
     sh_video_t *sh_video = demuxer->video->sh;
     if (demuxer->stream_pts != MP_NOPTS_VALUE)
@@ -1510,7 +1511,7 @@ double demuxer_get_current_time(demuxer_t *demuxer)
 		    if (osd_verbose)
                printf("adding difference %f ", time_since_last_nav_packet);
          } else {
-          printf("not adding odd diff1? (skip) %f", time_since_last_nav_packet);
+          printf("not adding odd diff1? (probable skip) %f", time_since_last_nav_packet);
           last_stream_pos_at_that_dvd_time = sh_video->pts;
          }
        }
@@ -1525,19 +1526,20 @@ double demuxer_get_current_time(demuxer_t *demuxer)
 	
 	// now morph it to "match" file times LOL
 	
-	double pts = get_time_ans;
 	if(osd_verbose)
-      printf("adding %f to %f with pts %f\n", osd_add_this_much, pts, pts);
+      printf("adding %f to pts %f\n", osd_add_this_much, get_time_ans);
+	  
     get_time_ans += osd_add_this_much;
     if(osd_verbose)
-       printf("final: %f\n", pts);
-    if((pts - 1.0) < sh_video->pts) {
+       printf("final: %f\n", get_time_ans);
+	   
+    if((get_time_ans - 1.0) < sh_video->pts) {
               if(osd_verbose)
-                 printf("using mpeg ts appears larger, which if true is definitely better %f > %f - 1.0\n", sh_video->pts, pts);
-			pts = sh_video->pts;
+                 printf("using mpeg ts appears larger, which if true is definitely better %f > %f - 1.0\n", sh_video->pts, get_time_ans);
+			get_time_ans = sh_video->pts;
 	}
     
-    return pts;
+    return get_time_ans;
 }
 
 int demuxer_get_percent_pos(demuxer_t *demuxer)
