@@ -101,7 +101,7 @@ edl_record_ptr edl_parse_file(void)
                 continue;
             }
 
-            if (next_edl_record && start <= next_edl_record->stop_sec)
+            if (next_edl_record && start < next_edl_record->stop_sec)
             {
                 mp_msg(MSGT_CPLAYER, MSGL_WARN, MSGTR_EdlNOValidLine, line);
                 mp_msg(MSGT_CPLAYER, MSGL_WARN, MSGTR_EdlBadLineOverlap,
