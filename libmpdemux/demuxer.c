@@ -1518,7 +1518,8 @@ double demuxer_get_current_time(demuxer_t *demuxer)
 	}
     else if (sh_video) {
         get_time_ans = sh_video->pts;
-         printf("weird fella suddenly we're not a DVD? mpeg at %f ", sh_video->pts);
+	    if (osd_verbose)
+          printf("weird fella suddenly we're not a DVD? mpeg at %f ", sh_video->pts);
          // we get here at the mpeg "splits" cross overs splits...
 	}
 	
