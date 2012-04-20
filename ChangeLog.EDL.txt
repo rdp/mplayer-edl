@@ -1,6 +1,8 @@
 0.4:
 
-also try to jump more accurately, other bug fixes osd-add work at all
+bug fixes osd-add work at all
+
+slightly more accurate jump forward, add back in verbiage
 
 0.3:
 
