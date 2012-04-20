@@ -1,0 +1,11 @@
+0.4:
+
+also try to jump more accurately, other bug fixes osd-add work at all
+
+0.3:
+
+try to avoid infinite loop EDL seeks
+
+0.2:
+
+tighten up timings

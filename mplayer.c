@@ -2679,7 +2679,9 @@ static void edl_update(MPContext *mpctx)
             rel_seek_secs = next_edl_record->stop_sec - pts;
 			
 			if(rel_seek_secs == last_jump) {
-			  rel_seek_secs = max(0.25, rel_seek_secs); // 0.151834 repeated can mean that we're stuck in an infinite loop [see ML] hmm...
+			  // biggest I've seen: .667
+			  rel_seek_secs = max(0.30, rel_seek_secs); // 0.151834 repeated can mean that we're stuck in an infinite loop [see ML] hmm...
+			  // having a big'ish number here won't probably matter, though I guess typically they're every 0.5s, so...it has a teeny chance of skipping on VOBU too far forward
 			}
 			// try not to punish normal jumps...
 			last_jump = rel_seek_secs;			

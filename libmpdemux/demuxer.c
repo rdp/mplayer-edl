@@ -1489,7 +1489,7 @@ static double add_precision_to_dvd_time(demuxer_t *demuxer) {
 	   if(get_time_ans != last_dvd_update_pos) {
 	     // got a new NAV packet
          if (osd_verbose)
-           printf("new NAV packet! %f [already adjusted] at %f ", get_time_ans, sh_video->pts);
+           printf("new NAV packet! %f at mpeg %f ", get_time_ans, sh_video->pts);
          last_dvd_update_pos = get_time_ans;
          last_stream_pos_at_that_dvd_time = sh_video->pts;
        } else {
@@ -1498,7 +1498,7 @@ static double add_precision_to_dvd_time(demuxer_t *demuxer) {
          if(time_since_last_nav_packet > 0 && time_since_last_nav_packet < 1.5) { // should never exceed 1.5s, typically <= 0.4
            get_time_ans += time_since_last_nav_packet;
 		    if (osd_verbose)
-               printf("adding difference %f ", time_since_last_nav_packet);
+               printf("adding MPEG difference since last NAV of %f ", time_since_last_nav_packet);
          } else {
           printf("not adding odd diff1? (probable skip) %f", time_since_last_nav_packet);
           last_stream_pos_at_that_dvd_time = sh_video->pts;
