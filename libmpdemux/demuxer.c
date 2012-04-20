@@ -1319,6 +1319,8 @@ void demux_flush(demuxer_t *demuxer)
     ds_free_packs(demuxer->sub);
 }
 
+static double add_precision_to_dvd_time(demuxer_t *demuxer);
+
 int demux_seek(demuxer_t *demuxer, float rel_seek_secs, float audio_delay,
                int flags)
 {
@@ -1349,7 +1351,7 @@ int demux_seek(demuxer_t *demuxer, float rel_seek_secs, float audio_delay,
     else {
         if (demuxer->stream_pts == MP_NOPTS_VALUE)
             goto dmx_seek;
-        pts = demuxer->stream_pts;
+        pts = add_precision_to_dvd_time(demuxer);
     }
 
     if (flags & SEEK_FACTOR) {
@@ -1478,25 +1480,12 @@ double last_dvd_update_pos = 0;
 double last_stream_pos_at_that_dvd_time = 0;
 float osd_add_this_much = 0.0;
 
-/**
- * \brief demuxer_get_current_time() returns the time of the current play in three possible ways:
- *        either when the stream reader satisfies STREAM_CTRL_GET_CURRENT_TIME (e.g. dvd)
- *        or using sh_video->pts when the former method fails
- *        0 otherwise
- * \return the current play time
- */
-double demuxer_get_current_time(demuxer_t *demuxer)
-{
-    // this method only gets called if EDL or OSD is on
-    double get_time_ans = 0;
-    sh_video_t *sh_video = demuxer->video->sh;
-    if (demuxer->stream_pts != MP_NOPTS_VALUE)
-	{
-       get_time_ans = demuxer->stream_pts;
+static double add_precision_to_dvd_time(demuxer_t *demuxer) {	 
+   double get_time_ans = demuxer->stream_pts;  
+       sh_video_t *sh_video = demuxer->video->sh;
        if (osd_verbose)
          printf("\nlast NAV packet was %f, mpeg at %f ", get_time_ans, sh_video->pts);
-	   
-       get_time_ans *= 1.001; // convert to 29.97 fps, mplayer's golden standard :P // could do this within libdvdnav uh guess...possibly all of it...
+
 	   if(get_time_ans != last_dvd_update_pos) {
 	     // got a new NAV packet
          if (osd_verbose)
@@ -1515,20 +1504,38 @@ double demuxer_get_current_time(demuxer_t *demuxer)
           last_stream_pos_at_that_dvd_time = sh_video->pts;
          }
        }
-	   
+	return get_time_ans;
+}
+
+
+/**
+ * \brief demuxer_get_current_time() returns the time of the current play in three possible ways:
+ *        either when the stream reader satisfies STREAM_CTRL_GET_CURRENT_TIME (e.g. dvd)
+ *        or using sh_video->pts when the former method fails
+ *        0 otherwise
+ * \return the current play time
+ */
+double demuxer_get_current_time(demuxer_t *demuxer)
+{
+    // this method only gets called if EDL or OSD is on
+    double get_time_ans = 0;
+    sh_video_t *sh_video = demuxer->video->sh;
+    if (demuxer->stream_pts != MP_NOPTS_VALUE)
+	{
+	   get_time_ans = add_precision_to_dvd_time(demuxer);
+       get_time_ans *= 1.001; // convert to 29.97 fps, mplayer's golden standard :P // could do this within libdvdnav uh guess...possibly all of it...	   
 	}
     else if (sh_video) {
         get_time_ans = sh_video->pts;
 	    if (osd_verbose)
           printf("weird fella suddenly we're not a DVD? mpeg at %f ", sh_video->pts);
-         // we get here at the mpeg "splits" cross overs splits...
+         // we get here at the mpeg cross over splits...
 	}
 	
-	// now morph it to "match" file times LOL
-	
+	// now morph it to "match" MPEG DVD stream times LOL
 	if(osd_verbose)
       printf("adding %f to pts %f\n", osd_add_this_much, get_time_ans);
-	  
+ 
     get_time_ans += osd_add_this_much;
     if(osd_verbose)
        printf("final: %f\n", get_time_ans);
