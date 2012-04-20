@@ -2684,7 +2684,7 @@ static void edl_update(MPContext *mpctx)
 			// try not to punish normal jumps...
 			last_jump = rel_seek_secs;			
 			
-            printf("\n\nEDL rel seek secs %f %f [%f,%f] \n", rel_seek_secs, pts,  next_edl_record->start_sec, next_edl_record->stop_sec);
+            printf("\n\nEDL rel seek secs +%f from pts:%f [%f,%f] \n", rel_seek_secs, pts,  next_edl_record->start_sec, next_edl_record->stop_sec);
             mp_msg(MSGT_CPLAYER, MSGL_DBG4, "EDL_SKIP: pts [%f], offset [%f], "
                                             "start [%f], stop [%f], length [%f]\n",
                    pts, rel_seek_secs,
