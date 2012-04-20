@@ -1350,7 +1350,7 @@ int demux_seek(demuxer_t *demuxer, float rel_seek_secs, float audio_delay,
     else {
         if (demuxer->stream_pts == MP_NOPTS_VALUE)
             goto dmx_seek;
-        pts = demuxer->stream_pts;
+        pts = demuxer_get_current_time(demuxer);
     }
 
     if (flags & SEEK_FACTOR) {
