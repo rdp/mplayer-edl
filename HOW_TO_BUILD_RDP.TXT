@@ -4,4 +4,8 @@ checkout ffmpeg to the "right revision"
 
 
 ./configure  --enable-iconv --enable-freetype --enable-static --enable-fontconfig --enable-runtime-cpudetection --enable-debug && make
-add -liconv -lexpat to config.mak
+add -liconv  -lfontconfig -lexpat -lfreetype to config.mak
+
+after building ffmpeg, comment out in Makefile:
+#$(FFMPEGLIBS): $(FFMPEGFILES) config.h
+#	$(MAKE) -C ffmpeg $(@:ffmpeg/%=%)
