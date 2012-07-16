@@ -1,0 +1,7 @@
+checkout ffmpeg to the "right revision"
+
+#define FFMPEG_VERSION "git-2012-04-18-124eb7e"
+
+
+./configure  --enable-iconv --enable-freetype --enable-static --enable-fontconfig --enable-runtime-cpudetection --enable-debug && make
+add -liconv -lexpat to config.mak
