@@ -472,7 +472,7 @@ static void free_str_list(void* dst) {
 }
 
 static int str_list_add(char** add, int n,void* dst,int pre) {
-  char** lst = VAL(dst);
+  char** lst;
   int ln;
 
   if(!dst) return M_OPT_PARSER_ERR;
@@ -962,7 +962,7 @@ const m_option_type_t m_option_type_print_func = {
 static int parse_subconf(const m_option_t* opt,const char *name, const char *param, void* dst, int src) {
   char *subparam;
   char *subopt;
-  int nr = 0,i,r;
+  int nr = 0,i,r = 1;
   const m_option_t *subopts;
   const char *p;
   char** lst = NULL;
@@ -994,7 +994,8 @@ static int parse_subconf(const m_option_t* opt,const char *name, const char *par
           p = &p[optlen];
           if (p[0] != '"') {
             mp_msg(MSGT_CFGPARSER, MSGL_ERR, "Terminating '\"' missing for '%s'\n", subopt);
-            return M_OPT_INVALID;
+            r = M_OPT_INVALID;
+            goto out;
           }
           p = &p[1];
         } else if (p[0] == '%') {
@@ -1002,7 +1003,8 @@ static int parse_subconf(const m_option_t* opt,const char *name, const char *par
           optlen = (int)strtol(p, (char**)&p, 0);
           if (!p || p[0] != '%' || (optlen > strlen(p) - 1)) {
             mp_msg(MSGT_CFGPARSER, MSGL_ERR, "Invalid length %i for '%s'\n", optlen, subopt);
-            return M_OPT_INVALID;
+            r = M_OPT_INVALID;
+            goto out;
           }
           p = &p[1];
           av_strlcpy(subparam, p, optlen + 1);
@@ -1017,7 +1019,8 @@ static int parse_subconf(const m_option_t* opt,const char *name, const char *par
         p = &p[1];
       else if (p[0]) {
         mp_msg(MSGT_CFGPARSER, MSGL_ERR, "Incorrect termination for '%s'\n", subopt);
-        return M_OPT_INVALID;
+        r = M_OPT_INVALID;
+        goto out;
       }
 
       switch(sscanf_ret)
@@ -1030,11 +1033,12 @@ static int parse_subconf(const m_option_t* opt,const char *name, const char *par
 	  }
 	  if(!subopts[i].name) {
 	    mp_msg(MSGT_CFGPARSER, MSGL_ERR, "Option %s: Unknown suboption %s\n",name,subopt);
-	    return M_OPT_UNKNOWN;
+	    r = M_OPT_UNKNOWN;
+	    goto out;
 	  }
 	  r = m_option_parse(&subopts[i],subopt,
 			     subparam[0] == 0 ? NULL : subparam,NULL,src);
-	  if(r < 0) return r;
+	  if(r < 0) goto out;
 	  if(dst) {
 	    lst = realloc(lst,2 * (nr+2) * sizeof(char*));
 	    lst[2*nr] = strdup(subopt);
@@ -1046,12 +1050,15 @@ static int parse_subconf(const m_option_t* opt,const char *name, const char *par
 	}
     }
 
-  free(subparam);
-  free(subopt);
   if(dst)
     VAL(dst) = lst;
+  r = 1;
 
-  return 1;
+out:
+  free(subparam);
+  free(subopt);
+
+  return r;
 }
 
 const m_option_type_t m_option_type_subconfig = {
@@ -1076,12 +1083,20 @@ static struct {
 } mp_imgfmt_list[] = {
   {"444p16le", IMGFMT_444P16_LE},
   {"444p16be", IMGFMT_444P16_BE},
+  {"444p14le", IMGFMT_444P14_LE},
+  {"444p14be", IMGFMT_444P14_BE},
+  {"444p12le", IMGFMT_444P12_LE},
+  {"444p12be", IMGFMT_444P12_BE},
   {"444p10le", IMGFMT_444P10_LE},
   {"444p10be", IMGFMT_444P10_BE},
   {"444p9le",  IMGFMT_444P9_LE},
   {"444p9be",  IMGFMT_444P9_BE},
   {"422p16le", IMGFMT_422P16_LE},
   {"422p16be", IMGFMT_422P16_BE},
+  {"422p14le", IMGFMT_422P14_LE},
+  {"422p14be", IMGFMT_422P14_BE},
+  {"422p12le", IMGFMT_422P12_LE},
+  {"422p12be", IMGFMT_422P12_BE},
   {"422p10le", IMGFMT_422P10_LE},
   {"422p10be", IMGFMT_422P10_BE},
   {"422p9le",  IMGFMT_422P9_LE},
@@ -1099,6 +1114,7 @@ static struct {
   {"420p10",   IMGFMT_420P10},
   {"420p9",    IMGFMT_420P9},
   {"444a", IMGFMT_444A},
+  {"422a", IMGFMT_422A},
   {"420a", IMGFMT_420A},
   {"444p", IMGFMT_444P},
   {"422p", IMGFMT_422P},
@@ -1116,6 +1132,9 @@ static struct {
   {"hm12", IMGFMT_HM12},
   {"y800", IMGFMT_Y800},
   {"y8",   IMGFMT_Y8},
+  {"y8a",  IMGFMT_Y8A},
+  {"y16be", IMGFMT_Y16_BE},
+  {"y16le", IMGFMT_Y16_LE},
   {"nv12", IMGFMT_NV12},
   {"nv21", IMGFMT_NV21},
   {"bgr24", IMGFMT_BGR24},
@@ -1145,6 +1164,10 @@ static struct {
   {"argb", IMGFMT_ARGB},
   {"bgra", IMGFMT_BGRA},
   {"abgr", IMGFMT_ABGR},
+  {"gbr14pbe", IMGFMT_GBR14PLE},
+  {"gbr14ple", IMGFMT_GBR14PBE},
+  {"gbr12pbe", IMGFMT_GBR12PLE},
+  {"gbr12ple", IMGFMT_GBR12PBE},
   {"gbr24p", IMGFMT_GBR24P},
   {"mjpeg", IMGFMT_MJPEG},
   {"mjpg", IMGFMT_MJPEG},

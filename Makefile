@@ -164,21 +164,6 @@ SRCS_COMMON-$(MACOSX_FINDER)         += osdep/macosx_finder_args.c
 SRCS_COMMON-$(MNG)                   += libmpdemux/demux_mng.c
 SRCS_COMMON-$(MPG123)                += libmpcodecs/ad_mpg123.c
 
-SRCS_MP3LIB-X86-$(HAVE_AMD3DNOW)     += mp3lib/dct36_3dnow.c \
-                                        mp3lib/dct64_3dnow.c
-SRCS_MP3LIB-X86-$(HAVE_AMD3DNOWEXT)  += mp3lib/dct36_k7.c \
-                                        mp3lib/dct64_k7.c
-SRCS_MP3LIB-X86-$(HAVE_MMX)          += mp3lib/dct64_mmx.c
-SRCS_MP3LIB-$(ARCH_X86_32)           += mp3lib/decode_i586.c \
-                                        $(SRCS_MP3LIB-X86-yes)
-SRCS_MP3LIB-$(HAVE_ALTIVEC)          += mp3lib/dct64_altivec.c
-SRCS_MP3LIB-$(HAVE_MMX)              += mp3lib/decode_mmx.c
-SRCS_MP3LIB-$(HAVE_SSE)              += mp3lib/dct64_sse.c
-SRCS_MP3LIB                          += mp3lib/sr1.c \
-                                        $(SRCS_MP3LIB-yes)
-SRCS_COMMON-$(MP3LIB)                += libmpcodecs/ad_mp3lib.c \
-                                        $(SRCS_MP3LIB)
-
 SRCS_COMMON-$(MUSEPACK)              += libmpcodecs/ad_mpc.c \
                                         libmpdemux/demux_mpc.c
 SRCS_COMMON-$(NATIVE_RTSP)           += stream/stream_rtsp.c \
@@ -220,21 +205,6 @@ SRCS_COMMON-$(REAL_CODECS)           += libmpcodecs/ad_realaud.c \
                                         libmpcodecs/vd_realvid.c
 SRCS_COMMON-$(SPEEX)                 += libmpcodecs/ad_speex.c
 SRCS_COMMON-$(STREAM_CACHE)          += stream/cache2.c
-
-SRCS_COMMON-$(TREMOR_INTERNAL)       += tremor/bitwise.c \
-                                        tremor/block.c \
-                                        tremor/codebook.c \
-                                        tremor/floor0.c \
-                                        tremor/floor1.c \
-                                        tremor/framing.c \
-                                        tremor/info.c \
-                                        tremor/mapping0.c \
-                                        tremor/mdct.c \
-                                        tremor/registry.c \
-                                        tremor/res012.c \
-                                        tremor/sharedbook.c \
-                                        tremor/synthesis.c \
-                                        tremor/window.c \
 
 SRCS_COMMON-$(TV)                    += stream/stream_tv.c stream/tv.c \
                                         stream/frequencies.c stream/tvi_dummy.c
@@ -364,6 +334,7 @@ SRCS_COMMON = asxparser.c \
               libmpcodecs/vd_null.c \
               libmpcodecs/vd_raw.c \
               libmpcodecs/vd_sgi.c \
+              libmpcodecs/vd_black.c \
               libmpcodecs/vf.c \
               libmpcodecs/vf_1bpp.c \
               libmpcodecs/vf_2xsai.c \
@@ -503,7 +474,7 @@ SRCS_MPLAYER-$(ARTS)         += libao2/ao_arts.c
 SRCS_MPLAYER-$(BL)           += libvo/vo_bl.c
 SRCS_MPLAYER-$(CACA)         += libvo/vo_caca.c
 SRCS_MPLAYER-$(COREAUDIO)    += libao2/ao_coreaudio.c
-SRCS_MPLAYER-$(COREVIDEO)    += libvo/vo_corevideo.m libvo/osx_common.c
+SRCS_MPLAYER-$(COREVIDEO)    += libvo/vo_corevideo.m libvo/osx_common.c libvo/osx_objc_common.m
 SRCS_MPLAYER-$(DART)         += libao2/ao_dart.c
 SRCS_MPLAYER-$(DGA)          += libvo/vo_dga.c
 SRCS_MPLAYER-$(DIRECT3D)     += libvo/vo_direct3d.c libvo/w32_common.c
@@ -518,9 +489,10 @@ SRCS_MPLAYER-$(GGI)          += libvo/vo_ggi.c
 SRCS_MPLAYER-$(GIF)          += libvo/vo_gif89a.c
 SRCS_MPLAYER-$(GL)           += libvo/gl_common.c libvo/vo_gl.c \
                                 libvo/csputils.c
+SRCS_MPLAYER-$(GL_OSX)       += libvo/osx_common.c libvo/osx_objc_common.m
 SRCS_MPLAYER-$(GL_SDL)       += libvo/sdl_common.c
-SRCS_MPLAYER-$(GL_WIN32)     += libvo/w32_common.c libvo/vo_gl2.c
-SRCS_MPLAYER-$(GL_X11)       += libvo/x11_common.c libvo/vo_gl2.c
+SRCS_MPLAYER-$(GL_WIN32)     += libvo/w32_common.c libvo/vo_gl_tiled.c
+SRCS_MPLAYER-$(GL_X11)       += libvo/x11_common.c libvo/vo_gl_tiled.c
 SRCS_MPLAYER-$(MATRIXVIEW)   += libvo/vo_matrixview.c libvo/matrixview.c
 SRCS_MPLAYER-$(GUI)          += gui/util/bitmap.c \
                                 gui/util/list.c \
@@ -811,6 +783,9 @@ config.mak: configure
 	@echo "####### Please run ./configure again - it's changed! #######"
 	@echo "############################################################"
 
+checkhelp: help/help_mp*.h
+	help/help_check.sh $(CC) $^
+
 help_mp.h: help/help_mp-en.h $(HELP_FILE)
 	help/help_create.sh $(HELP_FILE) $(CHARSET)
 
@@ -871,7 +846,7 @@ osdep/mplayer-rc.o: osdep/mplayer.exe.manifest
 
 gui/%: CFLAGS += -Wno-strict-prototypes
 
-libdvdcss/%:   CFLAGS := -Ilibdvdcss -D_GNU_SOURCE -DVERSION=\"1.2.10\" $(CFLAGS_LIBDVDCSS) $(CFLAGS)
+libdvdcss/%:   CFLAGS := -Ilibdvdcss -D_GNU_SOURCE -DVERSION=\"1.2.12\" $(CFLAGS_LIBDVDCSS) $(CFLAGS)
 libdvdnav/%:   CFLAGS := -Ilibdvdnav -D_GNU_SOURCE -DHAVE_CONFIG_H -DVERSION=\"MPlayer-custom\" $(CFLAGS)
 libdvdread4/%: CFLAGS := -Ilibdvdread4 -D_GNU_SOURCE $(CFLAGS_LIBDVDCSS_DVDREAD) $(CFLAGS)
 
@@ -1045,9 +1020,7 @@ LOADER_TEST_OBJS = $(SRCS_WIN32_EMULATION:.c=.o) $(SRCS_QTX_EMULATION:.S=.o) ffm
 loader/qtx/list$(EXESUF) loader/qtx/qtxload$(EXESUF): CFLAGS += -g
 loader/qtx/list$(EXESUF) loader/qtx/qtxload$(EXESUF): $(LOADER_TEST_OBJS)
 
-mp3lib/test$(EXESUF) mp3lib/test2$(EXESUF): $(SRCS_MP3LIB:.c=.o) libvo/aclib.o cpudetect.o $(TEST_OBJS)
-
-TESTS = codecs2html codec-cfg-test libvo/aspecttest mp3lib/test mp3lib/test2
+TESTS = codecs2html codec-cfg-test libvo/aspecttest
 
 ifdef ARCH_X86_32
 TESTS += loader/qtx/list loader/qtx/qtxload
@@ -1171,7 +1144,7 @@ dhahelperclean:
 -include $(DEP_FILES) $(DRIVER_DEP_FILES) $(TESTS_DEP_FILES) $(TOOLS_DEP_FILES) $(DHAHELPER_DEP_FILES)
 
 .PHONY: all doxygen *install* *tools drivers dhahelper*
-.PHONY: checkheaders *clean tests check_checksums fatetest
+.PHONY: checkheaders *clean tests check_checksums fatetest checkhelp
 .PHONY: doc html-chunked* html-single* xmllint*
 
 # Disable suffix rules.  Most of the builtin rules are suffix rules,

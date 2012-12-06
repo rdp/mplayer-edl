@@ -587,10 +587,8 @@ void uninit_player(unsigned int mask)
     if (mask & INITIALIZED_DEMUXER) {
         initialized_flags &= ~INITIALIZED_DEMUXER;
         current_module     = "free_demuxer";
-        if (mpctx->demuxer) {
-            mpctx->stream = mpctx->demuxer->stream;
+        if (mpctx->demuxer)
             free_demuxer(mpctx->demuxer);
-        }
         mpctx->demuxer = NULL;
     }
 
@@ -1814,6 +1812,7 @@ static int generate_video_frame(sh_video_t *sh_video, demux_stream_t *d_video)
         if (in_size < 0) {
             // try to extract last frames in case of decoder lag
             in_size = 0;
+            start   = NULL;
             pts     = MP_NOPTS_VALUE;
             hit_eof = 1;
         }
@@ -2096,6 +2095,19 @@ static void adjust_sync_and_print_status(int between_frames, float timing_error)
                 ++drop_message;
                 mp_msg(MSGT_AVSYNC, MSGL_WARN, MSGTR_SystemTooSlow);
             }
+            if (AV_delay > 0.5 && correct_pts && mpctx->delay < -audio_delay - 30) {
+                // This case means that we are supposed to stop video for a long
+                // time, even though audio is already ahead.
+                // This happens e.g. when initial audio pts is 10000, video
+                // starts at 0 but suddenly jumps to match audio.
+                // This is common in ogg streams.
+                // Only check for -correct-pts since this case does not cause
+                // issues with -nocorrect-pts.
+                mp_msg(MSGT_AVSYNC, MSGL_WARN, "Timing looks severely broken, resetting\n");
+                AV_delay = 0;
+                timing_error = 0;
+                mpctx->delay = -audio_delay;
+            }
             if (autosync)
                 x = AV_delay * 0.1f;
             else
@@ -2296,8 +2308,15 @@ static int sleep_until_update(float *time_frame, float *aq_sleep_time)
     //============================== SLEEP: ===================================
 
     // flag 256 means: libvo driver does its timing (dvb card)
-    if (*time_frame > 0.001 && !(vo_flags & 256))
-        *time_frame = timing_sleep(*time_frame);
+    if (!(vo_flags & 256)) {
+        if (*time_frame > 1.5) {
+            // Avoid sleeping too long without reacting to user input
+            usec_sleep(1000000);
+            *time_frame -= GetRelativeTime();
+            frame_time_remaining = 1;
+	} else if (*time_frame > 0.001)
+            *time_frame = timing_sleep(*time_frame);
+    }
 
     handle_udp_master(mpctx->sh_video->pts);
 
@@ -2428,6 +2447,7 @@ static double update_video(int *blit_frame)
         int full_frame;
 
         do {
+            int flush;
             current_module = "video_read_frame";
             frame_time     = sh_video->next_frame_time;
             in_size = video_read_frame(sh_video, &sh_video->next_frame_time,
@@ -2442,9 +2462,14 @@ static double update_video(int *blit_frame)
                 if (mpctx->d_audio)
                     mpctx->d_audio->eof = 0;
                 mpctx->stream->eof = 0;
-            } else
+            }
 #endif
-            if (in_size < 0)
+            flush = in_size < 0 && mpctx->d_video->eof;
+            if (flush) {
+                start = NULL;
+                in_size = 0;
+            }
+            if (mpctx->stream->type != STREAMTYPE_DVDNAV && in_size < 0)
                 return -1;
             if (in_size > max_framesize)
                 max_framesize = in_size;  // stats
@@ -2453,11 +2478,14 @@ static double update_video(int *blit_frame)
 #ifdef CONFIG_DVDNAV
             full_frame    = 1;
             decoded_frame = mp_dvdnav_restore_smpi(&in_size, &start, decoded_frame);
-            // still frame has been reached, no need to decode
-            if (in_size > 0 && !decoded_frame)
 #endif
+            // still frame has been reached, no need to decode
+            if ((in_size > 0 || flush) && !decoded_frame)
             decoded_frame = decode_video(sh_video, start, in_size, drop_frame,
                                          sh_video->pts, &full_frame);
+
+            if (flush && !decoded_frame)
+                return -1;
 
             if (full_frame) {
                 sh_video->timer += frame_time;
@@ -2631,6 +2659,8 @@ static void edl_update(MPContext *mpctx)
         edl_records     = NULL;
         return;
     }
+
+    pts = mpctx->sh_video->pts;
     // This indicates that we need to reset next EDL record according
     // to new PTS due to seek or other condition
     if (edl_needs_reset) {
@@ -3136,6 +3166,7 @@ play_next_file:
             run_command(mpctx, cmd);
             break;
         }
+        mpctx->osd_function = cmd->pausing ? OSD_PAUSE : OSD_PLAY;
 
         mp_cmd_free(cmd);
 
@@ -3243,7 +3274,7 @@ play_next_file:
         current_module = "handle_playlist";
         mp_msg(MSGT_CPLAYER, MSGL_V, "Parsing playlist %s...\n",
                filename_recode(filename));
-        entry      = parse_playtree(mpctx->stream, 0);
+        entry      = parse_playtree(mpctx->stream, use_gui);
         mpctx->eof = playtree_add_playlist(entry);
         goto goto_next_file;
     }
@@ -3876,6 +3907,8 @@ goto_enable_cache:
 
 #ifdef CONFIG_DVDNAV
             if (mpctx->stream->type == STREAMTYPE_DVDNAV) {
+                // do not clobber subtitles
+                if (!mp_dvdnav_number_of_subs(mpctx->stream)) {
                 nav_highlight_t hl;
                 mp_dvdnav_get_highlight(mpctx->stream, &hl);
                 if (!vo_spudec || !spudec_apply_palette_crop(vo_spudec, hl.palette, hl.sx, hl.sy, hl.ex, hl.ey)) {
@@ -3886,9 +3919,13 @@ goto_enable_cache:
                     vo_osd_changed(OSDTYPE_DVDNAV);
                     vo_osd_changed(OSDTYPE_SPU);
                 }
+                }
 
                 if (mp_dvdnav_stream_has_changed(mpctx->stream)) {
                     double ar = -1.0;
+                    // clear highlight
+                    if (vo_spudec)
+                        spudec_apply_palette_crop(vo_spudec, 0, 0, 0, 0, 0);
                     if (mpctx->sh_video &&
                         stream_control(mpctx->demuxer->stream,
                                        STREAM_CTRL_GET_ASPECT_RATIO, &ar)

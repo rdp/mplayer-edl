@@ -35,12 +35,10 @@ static const vd_info_t info = {
 LIBVD_EXTERN(hmblck)
 
 static void de_macro_y(unsigned char* dst,unsigned char* src,int dstride,int w,int h){
-    unsigned int y;
+    int y,x,i;
     // descramble Y plane
     for (y=0; y<h; y+=16) {
-	unsigned int x;
         for (x=0; x<w; x+=16) {
-	    unsigned int i;
             for (i=0; i<16; i++) {
                 memcpy(dst + x + (y+i)*dstride, src, 16);
                 src+=16;
@@ -50,12 +48,10 @@ static void de_macro_y(unsigned char* dst,unsigned char* src,int dstride,int w,i
 }
 
 static void de_macro_uv(unsigned char* dstu,unsigned char* dstv,unsigned char* src,int dstride,int w,int h){
-    unsigned int y;
+    int y,x,i;
     // descramble U/V plane
     for (y=0; y<h; y+=16) {
-	unsigned int x;
         for (x=0; x<w; x+=8) {
-	    unsigned int i;
             for (i=0; i<16; i++) {
 		int idx=x + (y+i)*dstride;
 		dstu[idx+0]=src[0]; dstv[idx+0]=src[1];
@@ -117,6 +113,14 @@ static int control(sh_video_t *sh,int cmd, void *arg,...){
  * init driver
  */
 static int init(sh_video_t *sh){
+
+    if(sh->format != IMGFMT_HM12) return 0;
+
+    if((sh->disp_w&31) != 0 || (sh->disp_h&31) != 0) {
+        mp_msg(MSGT_DECVIDEO, MSGL_ERR,
+               "hmblck: Image size must be multiple of 32.\n");
+        return 0;
+    }
     return mpcodecs_config_vo(sh,sh->disp_w,sh->disp_h,sh->format);
 }
 /*************************************************************************

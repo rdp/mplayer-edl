@@ -1170,7 +1170,7 @@ interpret_key(int code, int paused)
 	break;
     }
     if(j == num_key_down) { // key was not in the down keys : add it
-      if(num_key_down > MP_MAX_KEY_DOWN) {
+      if(num_key_down >= MP_MAX_KEY_DOWN) {
 	mp_msg(MSGT_INPUT,MSGL_ERR,MSGTR_INPUT_INPUT_Err2ManyKeyDowns);
 	return NULL;
       }
@@ -1491,26 +1491,22 @@ mp_input_get_key_from_name(const char *name) {
 
 static int
 mp_input_get_input_from_name(char* name,int* keys) {
-  char *end,*ptr;
+  char *ptr;
   int n=0;
 
   ptr = name;
-  n = 0;
-  for(end = strchr(ptr,'-') ; ptr != NULL ; end = strchr(ptr,'-')) {
+  for(n = 0; ptr && *ptr && n < MP_MAX_KEY_DOWN; n++) {
+    char *end = strchr(ptr,'-');
     if(end && end[1] != '\0') {
       if(end[1] == '-')
-	end = &end[1];
+        end++;
       end[0] = '\0';
     }
     keys[n] = mp_input_get_key_from_name(ptr);
     if(keys[n] < 0) {
       return 0;
     }
-    n++;
-    if(end && end[1] != '\0' && n < MP_MAX_KEY_DOWN)
-      ptr = &end[1];
-    else
-      break;
+    ptr = end + !!end;
   }
   keys[n] = 0;
   return 1;
@@ -1910,17 +1906,19 @@ static int mp_input_print_cmd_list(m_option_t* cfg) {
  */
 int
 mp_input_check_interrupt(int time) {
-  mp_cmd_t* cmd;
-  if((cmd = mp_input_get_cmd(time,0,1)) == NULL)
+  mp_cmd_t *cmd = mp_input_get_cmd(time,0,1);
+  if (!cmd)
     return 0;
   switch(cmd->id) {
   case MP_CMD_QUIT:
   case MP_CMD_PLAY_TREE_STEP:
   case MP_CMD_PLAY_TREE_UP_STEP:
   case MP_CMD_PLAY_ALT_SRC_STEP:
+    mp_cmd_free(cmd);
     // The cmd will be executed when we are back in the main loop
     return 1;
   }
+  mp_cmd_free(cmd);
   // remove the cmd from the queue
   cmd = mp_input_get_cmd(time,0,0);
   mp_cmd_free(cmd);

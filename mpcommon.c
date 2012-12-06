@@ -46,6 +46,7 @@
 #include "sub/ass_mp.h"
 #include "sub/vobsub.h"
 #include "sub/av_sub.h"
+#include "sub/sub_cc.h"
 #include "libmpcodecs/dec_teletext.h"
 #include "libavutil/intreadwrite.h"
 #include "m_option.h"
@@ -73,10 +74,12 @@ void print_version(const char* name)
     GetCpuCaps(&gCpuCaps);
 #if ARCH_X86
     mp_msg(MSGT_CPLAYER, MSGL_V,
-           "CPUflags:  MMX: %d MMX2: %d 3DNow: %d 3DNowExt: %d SSE: %d SSE2: %d SSSE3: %d\n",
+           "CPUflags:  MMX: %d MMX2: %d 3DNow: %d 3DNowExt: %d SSE: %d SSE2: %d SSE3: %d SSSE3: %d SSE4: %d SSE4.2: %d AVX: %d\n",
            gCpuCaps.hasMMX, gCpuCaps.hasMMX2,
            gCpuCaps.has3DNow, gCpuCaps.has3DNowExt,
-           gCpuCaps.hasSSE, gCpuCaps.hasSSE2, gCpuCaps.hasSSSE3);
+           gCpuCaps.hasSSE, gCpuCaps.hasSSE2, gCpuCaps.hasSSE3,
+           gCpuCaps.hasSSSE3, gCpuCaps.hasSSE4, gCpuCaps.hasSSE42,
+           gCpuCaps.hasAVX);
 #if CONFIG_RUNTIME_CPUDETECT
     mp_msg(MSGT_CPLAYER, MSGL_V, "Compiled with runtime CPU detection.\n");
 #else
@@ -93,8 +96,16 @@ if (HAVE_SSE)
     mp_msg(MSGT_CPLAYER,MSGL_V," SSE");
 if (HAVE_SSE2)
     mp_msg(MSGT_CPLAYER,MSGL_V," SSE2");
+if (HAVE_SSE3)
+    mp_msg(MSGT_CPLAYER,MSGL_V," SSE3");
 if (HAVE_SSSE3)
     mp_msg(MSGT_CPLAYER,MSGL_V," SSSE3");
+if (HAVE_SSE4)
+    mp_msg(MSGT_CPLAYER,MSGL_V," SSE4");
+if (HAVE_SSE42)
+    mp_msg(MSGT_CPLAYER,MSGL_V," SSE4.2");
+if (HAVE_AVX)
+    mp_msg(MSGT_CPLAYER,MSGL_V," AVX");
 if (HAVE_CMOV)
     mp_msg(MSGT_CPLAYER,MSGL_V," CMOV");
     mp_msg(MSGT_CPLAYER,MSGL_V,"\n");
@@ -181,6 +192,7 @@ void update_subtitles(sh_video_t *sh_video, double refpts, demux_stream_t *d_dvd
         if (is_av_sub(type))
             reset_avsub(d_dvdsub->sh);
 #endif
+        subcc_reset();
     }
     // find sub
     if (subdata) {
@@ -240,7 +252,7 @@ void update_subtitles(sh_video_t *sh_video, double refpts, demux_stream_t *d_dvd
             if (vo_vobsub || timestamp >= 0)
                 spudec_assemble(vo_spudec, packet, len, timestamp);
         }
-    } else if (is_text_sub(type) || is_av_sub(type) || type == 'd') {
+    } else if (is_text_sub(type) || is_av_sub(type) || type == 'd' || type == 'c') {
         int orig_type = type;
         double endpts;
         if (type == 'd' && !d_dvdsub->demuxer->teletext) {
@@ -274,6 +286,15 @@ void update_subtitles(sh_video_t *sh_video, double refpts, demux_stream_t *d_dvd
             if (type == 'd') {
                 if (d_dvdsub->demuxer->teletext) {
                     uint8_t *p = packet;
+                    if (len == 3124) { // wtv subtitle-only format
+                        while (len >= 42) {
+                            teletext_control(d_dvdsub->demuxer->teletext,
+                                TV_VBI_CONTROL_DECODE_LINE, p);
+                            p   += 42;
+                            len -= 42;
+                        }
+                        return;
+                    }
                     p++;
                     len--;
                     while (len >= 46) {
@@ -285,6 +306,10 @@ void update_subtitles(sh_video_t *sh_video, double refpts, demux_stream_t *d_dvd
                         len -= sublen + 2;
                     }
                 }
+                continue;
+            }
+            if (type == 'c') {
+                subcc_process_data(packet, len);
                 continue;
             }
 #ifdef CONFIG_ASS

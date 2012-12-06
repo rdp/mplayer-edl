@@ -20,12 +20,13 @@
 #define MPLAYER_CODEC_CFG_H
 
 #define CODECS_MAX_FOURCC       92
-#define CODECS_MAX_OUTFMT       16
+#define CODECS_MAX_OUTFMT       32
 #define CODECS_MAX_INFMT        16
 
 // Global flags:
 #define CODECS_FLAG_SEEKABLE    (1<<0)
 #define CODECS_FLAG_ALIGN16     (1<<1)
+#define CODECS_FLAG_DUMMY       (1<<2)
 
 // Outfmt flags:
 #define CODECS_FLAG_FLIP        (1<<0)

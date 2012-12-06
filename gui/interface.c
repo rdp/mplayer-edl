@@ -397,7 +397,6 @@ int gui(int what, void *data)
         wsVisibleMouse(&guiApp.videoWindow, wsHideMouseCursor);
 
         if (guiInfo.NewPlay == GUI_FILE_NEW) {
-            dvd_title = 0;
             audio_id  = -1;
             video_id  = -1;
             dvdsub_id = -1;
@@ -438,10 +437,10 @@ int gui(int what, void *data)
             sprintf(tmp, "dvd://%d", guiInfo.Track);
             uiSetFileName(NULL, tmp, SAME_STREAMTYPE);
         }
-
+#ifdef CONFIG_DVDREAD
             dvd_chapter = guiInfo.Chapter;
             dvd_angle   = guiInfo.Angle;
-
+#endif
             break;
         }
 
@@ -595,6 +594,9 @@ int gui(int what, void *data)
 
     case GUI_SET_STREAM:
 
+        if (guiInfo.StreamType == STREAMTYPE_PLAYLIST)
+            guiInfo.mpcontext->file_format = DEMUXER_TYPE_PLAYLIST;
+
         stream = data;
         guiInfo.StreamType = stream->type;
 
@@ -620,6 +622,12 @@ int gui(int what, void *data)
             stream_control(stream, STREAM_CTRL_GET_NUM_CHAPTERS, &guiInfo.Chapters);
             guiInfo.Angles = 0;
             stream_control(stream, STREAM_CTRL_GET_NUM_ANGLES, &guiInfo.Angles);
+            guiInfo.Track = 0;
+            stream_control(stream, STREAM_CTRL_GET_CURRENT_TITLE, &guiInfo.Track);
+            guiInfo.Track++;
+            // guiInfo.Chapter will be set by mplayer
+            guiInfo.Angle = 1;
+            stream_control(stream, STREAM_CTRL_GET_ANGLE, &guiInfo.Angle);
 #ifdef CONFIG_DVDREAD
             dvd = stream->priv;
             guiInfo.AudioStreams = dvd->nr_of_channels;
@@ -627,9 +635,6 @@ int gui(int what, void *data)
             guiInfo.Subtitles = dvd->nr_of_subtitles;
             memcpy(guiInfo.Subtitle, dvd->subtitles, sizeof(dvd->subtitles));
 #endif
-            guiInfo.Track   = dvd_title + 1;
-            guiInfo.Chapter = dvd_chapter + 1;
-            guiInfo.Angle   = dvd_angle + 1;
             break;
         }
 

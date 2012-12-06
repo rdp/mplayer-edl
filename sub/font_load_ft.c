@@ -787,7 +787,7 @@ static int prepare_charset(char *charmap, char *encoding, FT_ULong *charset, FT_
     charset_size = count;
 
     iconv_close(cd);
-    if (charset_size==0) {
+    if (charset_size <= 1) {
 	mp_msg(MSGT_OSD, MSGL_ERR, "No characters to render!\n");
 	return -1;
     }
@@ -1130,7 +1130,7 @@ void load_font_ft(int width, int height, font_desc_t** fontp, const char *font_n
     FcChar8 *s;
     int face_index;
     FcBool scalable;
-    FcResult result;
+    FcResult result = FcResultMatch;
 #endif
     font_desc_t *vo_font = *fontp;
     vo_image_width = width;
@@ -1159,7 +1159,7 @@ void load_font_ft(int width, int height, font_desc_t** fontp, const char *font_n
                 FcConfigSubstitute(0, fc_pattern, FcMatchPattern);
                 FcDefaultSubstitute(fc_pattern);
                 fc_pattern2 = fc_pattern;
-                fc_pattern = FcFontMatch(0, fc_pattern, 0);
+                fc_pattern = FcFontMatch(0, fc_pattern, &result);
                 FcPatternDestroy(fc_pattern2);
             }
             // s doesn't need to be freed according to fontconfig docs

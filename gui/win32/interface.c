@@ -580,7 +580,6 @@ int gui(int what, void *data)
             vobsub_id = -1;
             stream_cache_size = -1;
             autosync = 0;
-            dvd_title = 0;
             force_fps = 0;
             if(!mygui->playlist->tracks) return 0;
             switch(guiInfo.StreamType)
@@ -593,8 +592,10 @@ int gui(int what, void *data)
                 case STREAMTYPE_DVD:
                 {
                     char tmp[512];
+#ifdef CONFIG_DVDREAD
                     dvd_chapter = guiInfo.Chapter;
                     dvd_angle = guiInfo.Angle;
+#endif
                     sprintf(tmp,"dvd://%d", guiInfo.Track);
                     uiSetFileName(NULL, tmp, SAME_STREAMTYPE);
                     break;
@@ -664,6 +665,12 @@ int gui(int what, void *data)
                     stream_control(stream, STREAM_CTRL_GET_NUM_CHAPTERS, &guiInfo.Chapters);
                     guiInfo.Angles = 0;
                     stream_control(stream, STREAM_CTRL_GET_NUM_ANGLES, &guiInfo.Angles);
+                    guiInfo.Track = 0;
+                    stream_control(stream, STREAM_CTRL_GET_CURRENT_TITLE, &guiInfo.Track);
+                    guiInfo.Track++;
+                    // guiInfo.Chapter will be set by mplayer
+                    guiInfo.Angle = 1;
+                    stream_control(stream, STREAM_CTRL_GET_ANGLE, &guiInfo.Angle);
 #ifdef CONFIG_DVDREAD
                     dvdp = stream->priv;
                     guiInfo.AudioStreams = dvdp->nr_of_channels;
@@ -671,9 +678,6 @@ int gui(int what, void *data)
                     guiInfo.Subtitles = dvdp->nr_of_subtitles;
                     memcpy(guiInfo.Subtitle, dvdp->subtitles, sizeof(dvdp->subtitles));
 #endif
-                    guiInfo.Chapter = dvd_chapter + 1;
-                    guiInfo.Angle = dvd_angle + 1;
-                    guiInfo.Track = dvd_title + 1;
                     break;
             }
             break;
@@ -796,7 +800,7 @@ int gui(int what, void *data)
               mygui->playlist->current = 0;
 
           fullscreen = 0;
-          if(style == WS_VISIBLE | WS_POPUP)
+          if(style == (WS_VISIBLE | WS_POPUP))
           {
               style = WS_OVERLAPPEDWINDOW | WS_SIZEBOX;
               SetWindowLong(mygui->videowindow, GWL_STYLE, style);
@@ -927,7 +931,7 @@ static int update_videowindow(void)
     if(!guiInfo.Playing)
     {
         window *desc = NULL;
-        int i;
+        unsigned int i;
 
         for (i=0; i<mygui->skin->windowcount; i++)
             if(mygui->skin->windows[i]->type == wiVideo)

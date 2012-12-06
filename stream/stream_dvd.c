@@ -26,8 +26,8 @@
 #include "config.h"
 #include "mp_msg.h"
 #include "help_mp.h"
+#include "path.h"
 
-#include <libgen.h>
 #include <errno.h>
 
 #define FIRST_AC3_AID 128
@@ -44,6 +44,7 @@
 #include "libmpdemux/demuxer.h"
 
 static char* dvd_device_current;
+static int dvd_title;
 int dvd_angle=1;
 
 #define	LIBDVDREAD_VERSION(maj,min,micro)	((maj)*10000 + (min)*100 + (micro))
@@ -686,6 +687,11 @@ static int control(stream_t *stream,int cmd,void* arg)
 
             return 1;
         }
+        case STREAM_CTRL_GET_CURRENT_TITLE:
+        {
+            *((unsigned int *)arg) = d->cur_title - 1;
+            return 1;
+        }
         case STREAM_CTRL_GET_CURRENT_CHAPTER:
         {
             *((unsigned int *)arg) = dvd_chapter_from_cell(d, d->cur_title-1, d->cur_cell);
@@ -1082,10 +1088,10 @@ static int ifo_stream_open (stream_t *stream, int mode, void *opts, int *file_fo
 
     mp_msg(MSGT_DVD, MSGL_INFO, ".IFO detected. Redirecting to dvd://\n");
 
-    filename = strdup(basename(stream->url));
+    filename = strdup(mp_basename(stream->url));
 
     spriv=calloc(1, sizeof(struct stream_priv_s));
-    spriv->device = strdup(dirname(stream->url));
+    spriv->device = mp_dirname(stream->url);
     if(!strncasecmp(filename,"vts_",4))
     {
         if(sscanf(filename+3, "_%02d_", &spriv->title)!=1)

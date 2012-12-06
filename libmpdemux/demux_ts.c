@@ -82,6 +82,7 @@ typedef enum
 	AUDIO_AAC_LATM	= mmioFOURCC('M', 'P', '4', 'L'),
 	AUDIO_TRUEHD	= mmioFOURCC('T', 'R', 'H', 'D'),
 	AUDIO_S302M     = mmioFOURCC('B', 'S', 'S', 'D'),
+	AUDIO_PCM_BR    = mmioFOURCC('B', 'P', 'C', 'M'),
 	SPU_DVD		= 0x3000000,
 	SPU_DVB		= 0x3000001,
 	SPU_TELETEXT	= 0x3000002,
@@ -258,6 +259,7 @@ static int IS_AUDIO(es_stream_type_t type)
 	case AUDIO_MP2:
 	case AUDIO_A52:
 	case AUDIO_LPCM_BE:
+	case AUDIO_PCM_BR:
 	case AUDIO_AAC:
 	case AUDIO_AAC_LATM:
 	case AUDIO_DTS:
@@ -334,7 +336,7 @@ try_fec:
 }
 
 static int parse_avc_sps(uint8_t *buf, int len, int *w, int *h);
-static inline uint8_t *pid_lang_from_pmt(ts_priv_t *priv, int pid);
+static uint8_t *pid_lang_from_pmt(ts_priv_t *priv, int pid);
 
 static void ts_add_stream(demuxer_t * demuxer, ES_stream_t *es)
 {
@@ -358,13 +360,13 @@ static void ts_add_stream(demuxer_t * demuxer, ES_stream_t *es)
 			priv->ts.streams[es->pid].type = TYPE_AUDIO;
 			mp_msg(MSGT_DEMUX, MSGL_V, "\r\nADDED AUDIO PID %d, type: %x stream n. %d\r\n", es->pid, sh->format, priv->last_aid);
 			priv->last_aid++;
-		}
 
-		if(es->extradata && es->extradata_len)
-		{
-			sh->wf = malloc(sizeof(*sh->wf) + es->extradata_len);
-			sh->wf->cbSize = es->extradata_len;
-			memcpy(sh->wf + 1, es->extradata, es->extradata_len);
+			if(es->extradata && es->extradata_len)
+			{
+				sh->wf = malloc(sizeof(*sh->wf) + es->extradata_len);
+				sh->wf->cbSize = es->extradata_len;
+				memcpy(sh->wf + 1, es->extradata, es->extradata_len);
+			}
 		}
 	}
 
@@ -414,6 +416,8 @@ static void ts_add_stream(demuxer_t * demuxer, ES_stream_t *es)
 				sh->type = 'v'; break;
 			case SPU_PGS:
 				sh->type = 'p'; break;
+			case SPU_TELETEXT:
+				sh->type = 'd'; break;
         		}
 			priv->ts.streams[es->pid].id = priv->last_sid;
 			priv->ts.streams[es->pid].sh = sh;
@@ -526,7 +530,7 @@ static int ts_check_file(demuxer_t * demuxer)
 }
 
 
-static inline int32_t progid_idx_in_pmt(ts_priv_t *priv, uint16_t progid)
+static int32_t progid_idx_in_pmt(ts_priv_t *priv, uint16_t progid)
 {
 	int x;
 
@@ -543,7 +547,7 @@ static inline int32_t progid_idx_in_pmt(ts_priv_t *priv, uint16_t progid)
 }
 
 
-static inline int32_t progid_for_pid(ts_priv_t *priv, int pid, int32_t req)		//finds the first program listing a pid
+static int32_t progid_for_pid(ts_priv_t *priv, int pid, int32_t req)		//finds the first program listing a pid
 {
 	int i, j;
 	pmt_t *pmt;
@@ -573,7 +577,7 @@ static inline int32_t progid_for_pid(ts_priv_t *priv, int pid, int32_t req)		//f
 	return -1;
 }
 
-static inline int32_t prog_pcr_pid(ts_priv_t *priv, int progid)
+static int32_t prog_pcr_pid(ts_priv_t *priv, int progid)
 {
 	int i;
 
@@ -588,7 +592,7 @@ static inline int32_t prog_pcr_pid(ts_priv_t *priv, int progid)
 }
 
 
-static inline int pid_match_lang(ts_priv_t *priv, uint16_t pid, char *lang)
+static int pid_match_lang(ts_priv_t *priv, uint16_t pid, char *lang)
 {
 	uint16_t i, j;
 	pmt_t *pmt;
@@ -889,6 +893,8 @@ static off_t ts_detect_streams(demuxer_t *demuxer, tsdemux_init_t *param)
 		mp_msg(MSGT_DEMUXER, MSGL_INFO, "AUDIO DTS(pid=%d)", param->apid);
 	else if(param->atype == AUDIO_LPCM_BE)
 		mp_msg(MSGT_DEMUXER, MSGL_INFO, "AUDIO LPCM(pid=%d)", param->apid);
+	else if(param->atype == AUDIO_PCM_BR)
+		mp_msg(MSGT_DEMUXER, MSGL_INFO, "AUDIO PCMBR(pid=%d)", param->apid);
 	else if(param->atype == AUDIO_AAC)
 		mp_msg(MSGT_DEMUXER, MSGL_INFO, "AUDIO AAC(pid=%d)", param->apid);
 	else if(param->atype == AUDIO_AAC_LATM)
@@ -1658,7 +1664,7 @@ static void ts_dump_streams(ts_priv_t *priv)
 }
 
 
-static inline int32_t prog_idx_in_pat(ts_priv_t *priv, uint16_t progid)
+static int32_t prog_idx_in_pat(ts_priv_t *priv, uint16_t progid)
 {
 	int x;
 
@@ -1675,7 +1681,7 @@ static inline int32_t prog_idx_in_pat(ts_priv_t *priv, uint16_t progid)
 }
 
 
-static inline int32_t prog_id_in_pat(ts_priv_t *priv, uint16_t pid)
+static int32_t prog_id_in_pat(ts_priv_t *priv, uint16_t pid)
 {
 	int x;
 
@@ -1748,7 +1754,6 @@ static int parse_pat(ts_priv_t * priv, int is_start, unsigned char *buff, int si
 	unsigned char *base;
 	int entries, i;
 	uint16_t progid;
-	struct pat_progs_t *tmp;
 	ts_section_t *section;
 
 	section = &(priv->pat.section);
@@ -1782,14 +1787,14 @@ static int parse_pat(ts_priv_t * priv, int is_start, unsigned char *buff, int si
 
 		if((idx = prog_idx_in_pat(priv, progid)) == -1)
 		{
-			int sz = sizeof(struct pat_progs_t) * (priv->pat.progs_cnt+1);
-			tmp = realloc_struct(priv->pat.progs, priv->pat.progs_cnt+1, sizeof(struct pat_progs_t));
-			if(tmp == NULL)
+			priv->pat.progs = realloc_struct(priv->pat.progs, priv->pat.progs_cnt+1, sizeof(struct pat_progs_t));
+			if(!priv->pat.progs)
 			{
+				int sz = sizeof(struct pat_progs_t) * (priv->pat.progs_cnt+1);
+				priv->pat.progs_cnt = 0;
 				mp_msg(MSGT_DEMUX, MSGL_ERR, "PARSE_PAT: COULDN'T REALLOC %d bytes, NEXT\n", sz);
 				break;
 			}
-			priv->pat.progs = tmp;
 			idx = priv->pat.progs_cnt;
 			priv->pat.progs_cnt++;
 		}
@@ -1805,7 +1810,7 @@ static int parse_pat(ts_priv_t * priv, int is_start, unsigned char *buff, int si
 }
 
 
-static inline int32_t es_pid_in_pmt(pmt_t * pmt, uint16_t pid)
+static int32_t es_pid_in_pmt(pmt_t * pmt, uint16_t pid)
 {
 	uint16_t i;
 
@@ -2041,7 +2046,7 @@ static uint16_t parse_mp4_es_descriptor(pmt_t *pmt, uint8_t *buf, int len)
 {
 	int i = 0, j = 0, k, found;
 	uint8_t flag;
-	mp4_es_descr_t es, *target_es = NULL, *tmp;
+	mp4_es_descr_t es, *target_es = NULL;
 
 	mp_msg(MSGT_DEMUX, MSGL_V, "PARSE_MP4ES: len=%d\n", len);
 	memset(&es, 0, sizeof(mp4_es_descr_t));
@@ -2076,13 +2081,13 @@ static uint16_t parse_mp4_es_descriptor(pmt_t *pmt, uint8_t *buf, int len)
 
 			if(! found)
 			{
-				tmp = realloc_struct(pmt->mp4es, pmt->mp4es_cnt+1, sizeof(mp4_es_descr_t));
-				if(tmp == NULL)
+				pmt->mp4es = realloc_struct(pmt->mp4es, pmt->mp4es_cnt+1, sizeof(mp4_es_descr_t));
+				if(!pmt->mp4es)
 				{
+					pmt->mp4es_cnt = 0;
 					fprintf(stderr, "CAN'T REALLOC MP4_ES_DESCR\n");
 					continue;
 				}
-				pmt->mp4es = tmp;
 				target_es = &(pmt->mp4es[pmt->mp4es_cnt]);
 				pmt->mp4es_cnt++;
 			}
@@ -2281,7 +2286,7 @@ static int parse_descriptors(struct pmt_es_t *es, uint8_t *ptr)
 		else if(ptr[j] == 0x56) // Teletext
 		{
 			if(descr_len >= 5) {
-				memcpy(es->lang, ptr+2, 3);
+				memcpy(es->lang, ptr+j+2, 3);
 				es->lang[3] = 0;
 			}
 			es->type = SPU_TELETEXT;
@@ -2417,8 +2422,6 @@ static int parse_pmt(ts_priv_t * priv, uint16_t progid, uint16_t pid, int is_sta
 	int32_t idx, es_count, section_bytes;
 	uint8_t m=0;
 	int skip;
-	pmt_t *tmp;
-	struct pmt_es_t *tmp_es;
 	ts_section_t *section;
 	ES_stream_t *tss;
 	int i;
@@ -2427,14 +2430,14 @@ static int parse_pmt(ts_priv_t * priv, uint16_t progid, uint16_t pid, int is_sta
 
 	if(idx == -1)
 	{
-		int sz = (priv->pmt_cnt + 1) * sizeof(pmt_t);
-		tmp = realloc_struct(priv->pmt, priv->pmt_cnt + 1, sizeof(pmt_t));
-		if(tmp == NULL)
+		priv->pmt = realloc_struct(priv->pmt, priv->pmt_cnt + 1, sizeof(pmt_t));
+		if(!priv->pmt)
 		{
+			int sz = (priv->pmt_cnt + 1) * sizeof(pmt_t);
+			priv->pmt_cnt = 0;
 			mp_msg(MSGT_DEMUX, MSGL_ERR, "PARSE_PMT: COULDN'T REALLOC %d bytes, NEXT\n", sz);
 			return 0;
 		}
-		priv->pmt = tmp;
 		idx = priv->pmt_cnt;
 		memset(&(priv->pmt[idx]), 0, sizeof(pmt_t));
 		priv->pmt_cnt++;
@@ -2488,14 +2491,14 @@ static int parse_pmt(ts_priv_t * priv, uint16_t progid, uint16_t pid, int is_sta
 		idx = es_pid_in_pmt(pmt, es_pid);
 		if(idx == -1)
 		{
-			int sz = sizeof(struct pmt_es_t) * (pmt->es_cnt + 1);
-			tmp_es = realloc_struct(pmt->es, pmt->es_cnt + 1, sizeof(struct pmt_es_t));
-			if(tmp_es == NULL)
+			pmt->es = realloc_struct(pmt->es, pmt->es_cnt + 1, sizeof(struct pmt_es_t));
+			if(!pmt->es)
 			{
+				int sz = sizeof(struct pmt_es_t) * (pmt->es_cnt + 1);
+				pmt->es_cnt = 0;
 				mp_msg(MSGT_DEMUX, MSGL_ERR, "PARSE_PMT, COULDN'T ALLOCATE %d bytes for PMT_ES\n", sz);
 				continue;
 			}
-			pmt->es = tmp_es;
 			idx = pmt->es_cnt;
 			memset(&(pmt->es[idx]), 0, sizeof(struct pmt_es_t));
 			pmt->es_cnt++;
@@ -2557,6 +2560,9 @@ static int parse_pmt(ts_priv_t * priv, uint16_t progid, uint16_t pid, int is_sta
 				break;
 			case 0x13:
 				pmt->es[idx].type = SL_SECTION;
+				break;
+			case 0x80:
+				pmt->es[idx].type = AUDIO_PCM_BR;
 				break;
 			case 0x81:
 				pmt->es[idx].type = AUDIO_A52;
@@ -2641,7 +2647,7 @@ static pmt_t* pmt_of_pid(ts_priv_t *priv, int pid, mp4_decoder_config_t **mp4_de
 }
 
 
-static inline int32_t pid_type_from_pmt(ts_priv_t *priv, int pid)
+static int32_t pid_type_from_pmt(ts_priv_t *priv, int pid)
 {
 	int32_t pmt_idx, pid_idx, i, j;
 
@@ -2668,7 +2674,7 @@ static inline int32_t pid_type_from_pmt(ts_priv_t *priv, int pid)
 }
 
 
-static inline uint8_t *pid_lang_from_pmt(ts_priv_t *priv, int pid)
+static uint8_t *pid_lang_from_pmt(ts_priv_t *priv, int pid)
 {
 	int32_t pmt_idx, pid_idx, i, j;
 

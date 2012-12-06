@@ -56,6 +56,8 @@ static const struct m_struct_st stream_opts = {
 
 static int fill_buffer(stream_t *s, char* buffer, int max_len){
   int r = read(s->fd,buffer,max_len);
+  // We are certain this is EOF, do not retry
+  if (max_len && r == 0) s->eof = 1;
   return (r <= 0) ? -1 : r;
 }
 
@@ -104,7 +106,7 @@ static int control(stream_t *s, int cmd, void *arg) {
       size = lseek(s->fd, 0, SEEK_END);
       lseek(s->fd, s->pos, SEEK_SET);
       if(size != (off_t)-1) {
-        *((off_t*)arg) = size;
+        *(uint64_t*)arg = size;
         return 1;
       }
     }

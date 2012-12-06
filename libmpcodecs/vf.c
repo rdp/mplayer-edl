@@ -278,7 +278,8 @@ void vf_mpi_clear(mp_image_t* mpi,int x0,int y0,int w,int h){
 mp_image_t* vf_get_image(vf_instance_t* vf, unsigned int outfmt, int mp_imgtype, int mp_imgflag, int w, int h){
   mp_image_t* mpi=NULL;
   int w2;
-  int number = mp_imgtype >> 16;
+  int number = (mp_imgtype >> 16) - 1;
+  int missing_palette;
 
 #ifdef MP_DEBUG
   assert(w == -1 || w >= vf->w);
@@ -296,7 +297,9 @@ mp_image_t* vf_get_image(vf_instance_t* vf, unsigned int outfmt, int mp_imgtype,
 
   if(vf->put_image==vf_next_put_image){
       // passthru mode, if the filter uses the fallback/default put_image() code
-      return vf_get_image(vf->next,outfmt,mp_imgtype,mp_imgflag,w,h);
+      mpi = vf_get_image(vf->next,outfmt,mp_imgtype,mp_imgflag,w,h);
+      mpi->usage_count++;
+      return mpi;
   }
 
   // Note: we should call libvo first to check if it supports direct rendering
@@ -333,14 +336,19 @@ mp_image_t* vf_get_image(vf_instance_t* vf, unsigned int outfmt, int mp_imgtype,
           break;
       number = i;
     }
-    if (number < 0 || number >= NUM_NUMBERED_MPI) return NULL;
+    if (number < 0 || number >= NUM_NUMBERED_MPI) {
+      mp_msg(MSGT_VFILTER, MSGL_FATAL, "Ran out of numbered images, expect crash. Filter before %s is broken.\n", vf->info->name);
+      return NULL;
+    }
     if (!vf->imgctx.numbered_images[number]) vf->imgctx.numbered_images[number] = new_mp_image(w2,h);
     mpi = vf->imgctx.numbered_images[number];
     mpi->number = number;
     break;
   }
-  if(mpi){
-    int missing_palette = !(mpi->flags & MP_IMGFLAG_RGB_PALETTE) && (mp_imgflag & MP_IMGFLAG_RGB_PALETTE);
+
+  if (!mpi)
+    return NULL;
+
     mpi->type=mp_imgtype;
     mpi->w=vf->w; mpi->h=vf->h;
     // keep buffer allocation status & color flags only:
@@ -349,6 +357,7 @@ mp_image_t* vf_get_image(vf_instance_t* vf, unsigned int outfmt, int mp_imgtype,
     // accept restrictions, draw_slice and palette flags only:
     mpi->flags|=mp_imgflag&(MP_IMGFLAGMASK_RESTRICTIONS|MP_IMGFLAG_DRAW_CALLBACK|MP_IMGFLAG_RGB_PALETTE);
     if(!vf->draw_slice) mpi->flags&=~MP_IMGFLAG_DRAW_CALLBACK;
+    missing_palette = !(mpi->flags & MP_IMGFLAG_RGB_PALETTE) && (mp_imgflag & MP_IMGFLAG_RGB_PALETTE);
     if(mpi->width!=w2 || mpi->height!=h || missing_palette){
 //      printf("vf.c: MPI parameters changed!  %dx%d -> %dx%d   \n", mpi->width,mpi->height,w2,h);
         if(mpi->flags&MP_IMGFLAG_ALLOCATED){
@@ -358,7 +367,8 @@ mp_image_t* vf_get_image(vf_instance_t* vf, unsigned int outfmt, int mp_imgtype,
                 if (mpi->flags & MP_IMGFLAG_RGB_PALETTE)
                     av_freep(&mpi->planes[1]);
                 mpi->flags&=~MP_IMGFLAG_ALLOCATED;
-                mp_msg(MSGT_VFILTER,MSGL_V,"vf.c: have to REALLOCATE buffer memory :(\n");
+                mp_msg(MSGT_VFILTER,MSGL_V,"vf.c: have to REALLOCATE buffer memory in vf_%s :(\n",
+                       vf->info->name);
             }
 //      } else {
         } {
@@ -423,8 +433,11 @@ mp_image_t* vf_get_image(vf_instance_t* vf, unsigned int outfmt, int mp_imgtype,
     }
 
   mpi->qscale = NULL;
-  }
   mpi->usage_count++;
+  // TODO: figure out what is going on with EXPORT types
+  if (mpi->usage_count > 1 && mpi->type != MP_IMGTYPE_EXPORT)
+      mp_msg(MSGT_VFILTER, MSGL_V, "Suspicious mp_image usage count %i in vf_%s (type %i)\n",
+             mpi->usage_count, vf->info->name, mpi->type);
 //  printf("\rVF_MPI: %p %p %p %d %d %d    \n",
 //      mpi->planes[0],mpi->planes[1],mpi->planes[2],
 //      mpi->stride[0],mpi->stride[1],mpi->stride[2]);
@@ -689,6 +702,12 @@ int vf_next_query_format(struct vf_instance *vf, unsigned int fmt){
 }
 
 int vf_next_put_image(struct vf_instance *vf,mp_image_t *mpi, double pts){
+    mpi->usage_count--;
+    if (mpi->usage_count < 0) {
+        mp_msg(MSGT_VFILTER, MSGL_V, "Bad mp_image usage count %i in vf_%s (type %i)\n",
+               mpi->usage_count, vf->info->name, mpi->type);
+        mpi->usage_count = 0;
+    }
     return vf->next->put_image(vf->next,mpi, pts);
 }
 

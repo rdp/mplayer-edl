@@ -238,7 +238,7 @@ demuxer_t *alloc_demuxer(stream_t *stream, int type, const char *filename)
         if (!(d->desc = get_demuxer_desc_from_type(type)))
             mp_msg(MSGT_DEMUXER, MSGL_ERR,
                    "BUG! Invalid demuxer type in new_demuxer(), "
-                   "big troubles ahead.");
+                   "big troubles ahead.\n");
     if (filename) // Filename hack for avs_check_file
         d->filename = strdup(filename);
     return d;
@@ -399,6 +399,8 @@ void free_sh_video(sh_video_t *sh)
 void free_demuxer(demuxer_t *demuxer)
 {
     int i;
+    if (!demuxer)
+        return;
     mp_msg(MSGT_DEMUXER, MSGL_DBG2, "DEMUXER: freeing %s demuxer at %p\n",
            demuxer->desc->shortdesc, demuxer);
     if (demuxer->desc->close)

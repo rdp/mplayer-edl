@@ -599,7 +599,7 @@ const m_option_t common_opts[] = {
     // specify IFO file for VOBSUB subtitle
     {"ifo", &spudec_ifo, CONF_TYPE_STRING, 0, 0, 0, NULL},
     // enable Closed Captioning display
-    {"subcc", &subcc_enabled, CONF_TYPE_INT, CONF_RANGE, 0, 4, NULL},
+    {"subcc", &subcc_enabled, CONF_TYPE_INT, CONF_RANGE, 0, 8, NULL},
     {"nosubcc", &subcc_enabled, CONF_TYPE_FLAG, 0, 1, 0, NULL},
     {"overlapsub", &suboverlap_enabled, CONF_TYPE_FLAG, 0, 0, 2, NULL},
     {"nooverlapsub", &suboverlap_enabled, CONF_TYPE_FLAG, 0, 0, 0, NULL},
@@ -610,7 +610,7 @@ const m_option_t common_opts[] = {
     {"font", &font_name, CONF_TYPE_STRING, 0, 0, 0, NULL},
     {"subfont", &sub_font_name, CONF_TYPE_STRING, 0, 0, 0, NULL},
     {"ffactor", &font_factor, CONF_TYPE_FLOAT, CONF_RANGE, 0.0, 10.0, NULL},
-    {"subpos", &sub_pos, CONF_TYPE_INT, CONF_RANGE, 0, 100, NULL},
+    {"subpos", &sub_pos, CONF_TYPE_INT, CONF_RANGE, 0, 150, NULL},
     {"subalign", &sub_alignment, CONF_TYPE_INT, CONF_RANGE, 0, 2, NULL},
     {"subwidth", &sub_width_p, CONF_TYPE_INT, CONF_RANGE, 10, 100, NULL},
     {"spualign", &spu_alignment, CONF_TYPE_INT, CONF_RANGE, -1, 2, NULL},

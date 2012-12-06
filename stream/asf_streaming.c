@@ -78,6 +78,7 @@ static int asf_streaming_start( stream_t *stream, int *demuxer_type) {
     int port = stream->streaming_ctrl->url->port;
 
     // Is protocol mms or mmsu?
+    /*
     if (!strcasecmp(proto, "mmsu") || !strcasecmp(proto, "mms"))
     {
 		mp_msg(MSGT_NETWORK,MSGL_V,"Trying ASF/UDP...\n");
@@ -86,6 +87,7 @@ static int asf_streaming_start( stream_t *stream, int *demuxer_type) {
 		mp_msg(MSGT_NETWORK,MSGL_V,"  ===> ASF/UDP failed\n");
 		if( fd==-2 ) return -1;
 	}
+    */
 
     //Is protocol mms or mmst?
     if (!strcasecmp(proto, "mmst") || !strcasecmp(proto, "mms"))
@@ -824,16 +826,12 @@ err_out:
 }
 
 static int open_s(stream_t *stream,int mode, void* opts, int* file_format) {
-	URL_t *url;
-
 	stream->streaming_ctrl = streaming_ctrl_new();
 	if( stream->streaming_ctrl==NULL ) {
 		return STREAM_ERROR;
 	}
 	stream->streaming_ctrl->bandwidth = network_bandwidth;
-	url = url_new(stream->url);
-	stream->streaming_ctrl->url = check4proxies(url);
-	url_free(url);
+	stream->streaming_ctrl->url = url_new_with_proxy(stream->url);
 
 	mp_msg(MSGT_OPEN, MSGL_INFO, MSGTR_MPDEMUX_ASF_InfoStreamASFURL, stream->url);
 	if((!strncmp(stream->url, "http", 4)) && (*file_format!=DEMUXER_TYPE_ASF && *file_format!=DEMUXER_TYPE_UNKNOWN)) {
