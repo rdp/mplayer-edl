@@ -19,6 +19,12 @@
 #ifndef MPLAYER_MP_TAGLISTS_H
 #define MPLAYER_MP_TAGLISTS_H
 
+#include "mp_msg.h"
+#include "mp_taglists.h"
+#include "libavutil/common.h"
+#include "libavformat/avformat.h"
+// for AVCodecTag
+#include "libavformat/internal.h"
 #include <stdint.h>
 
 enum CodecID mp_tag2codec_id(uint32_t tag, int audio);
