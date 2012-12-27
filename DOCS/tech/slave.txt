@@ -169,6 +169,9 @@ get_time_length
 get_time_pos
     Print out the current position in the file in seconds, as float.
 
+get_osd_pos
+    Print out the current OSD playback position, as float. For DVD's this is the OSD time, for normal files, the file time.
+
 get_vo_fullscreen
     Print out fullscreen status (1 == fullscreened, 0 == windowed).
 
@@ -527,6 +530,7 @@ path               string                    X            file playing
 demuxer            string                    X            demuxer used
 stream_pos         pos       0               X   X        position in stream
 stream_start       pos       0               X            start pos in stream
+osd_pos            pos       0               X            OSD position in media
 stream_end         pos       0               X            end pos in stream
 stream_length      pos       0               X            (end - start)
 stream_time_pos    time      0               X            present position in stream (in seconds)

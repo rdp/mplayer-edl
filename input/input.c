@@ -124,6 +124,7 @@ static const mp_cmd_t mp_cmds[] = {
 #endif
   { MP_CMD_GET_PERCENT_POS, "get_percent_pos", 0, { {-1,{0}} } },
   { MP_CMD_GET_TIME_POS, "get_time_pos", 0, { {-1,{0}} } },
+  { MP_CMD_GET_OSD_POS, "get_osd_pos", 0, { {-1,{0}} } },
   { MP_CMD_GET_TIME_LENGTH, "get_time_length", 0, { {-1,{0}} } },
   { MP_CMD_GET_FILENAME, "get_file_name", 0, { {-1,{0}} } },
   { MP_CMD_GET_VIDEO_CODEC, "get_video_codec", 0, { {-1,{0}} } },

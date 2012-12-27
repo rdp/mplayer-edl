@@ -3342,6 +3342,17 @@ int run_command(MPContext *mpctx, mp_cmd_t *cmd)
                 mp_msg(MSGT_GLOBAL, MSGL_INFO, "ANS_TIME_POSITION=%.1f\n", pos);
             }
             break;
+		case MP_CMD_GET_OSD_POS:{
+                float pos = 0;
+                if (sh_video)
+                    pos = demuxer_get_current_time(mpctx->demuxer);
+                else if (sh_audio && mpctx->audio_out)
+                    pos =
+                        playing_audio_pts(sh_audio, mpctx->d_audio,
+                                          mpctx->audio_out);
+                mp_msg(MSGT_GLOBAL, MSGL_INFO, "ANS_OSD_POS=%.2f\n", pos);
+		    break;
+            }
 
         case MP_CMD_RUN:
 #ifndef __MINGW32__
