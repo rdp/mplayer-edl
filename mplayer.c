@@ -1215,7 +1215,8 @@ static void print_status(float a_pos, float a_v, float corr)
 
     // Audio time
     if (mpctx->sh_audio) {
-        saddf(line, &pos, width, "A:%6.1f ", a_pos);
+	    saddf(line, &pos, width, "A:%6.1f ", demuxer_get_current_time(mpctx->demuxer)); // audio for smplayer...
+        saddf(line, &pos, width, "a:%6.1f ", a_pos);//real audio
         if (!sh_video) {
             float len = demuxer_get_time_length(mpctx->demuxer);
             saddf(line, &pos, width, "(");
