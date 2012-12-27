@@ -1,3 +1,8 @@
+0.5:
+
+give the right time to smplayer yikes!
+ possibly bump other things?
+
 0.4:
 
 bug fixes osd-add work at all
