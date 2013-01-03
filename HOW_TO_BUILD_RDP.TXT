@@ -1,11 +1,9 @@
-checkout ffmpeg to the "right revision"
+git submodule update --init
 
-#define FFMPEG_VERSION "git-2012-04-18-124eb7e"
-
-
-./configure  --enable-iconv --enable-freetype --enable-static --enable-fontconfig --enable-runtime-cpudetection --enable-debug && make
+./configure  --enable-iconv --enable-freetype --enable-static --enable-fontconfig --enable-runtime-cpudetection --enable-debug && make -j 2
 add -liconv  -lfontconfig -lexpat -lfreetype to config.mak
 
-after building ffmpeg, comment out in Makefile:
+after building ffmpeg, comment out in Makefile (may not have to):
+
 #$(FFMPEGLIBS): $(FFMPEGFILES) config.h
 #	$(MAKE) -C ffmpeg $(@:ffmpeg/%=%)
