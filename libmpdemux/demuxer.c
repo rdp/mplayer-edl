@@ -1517,13 +1517,16 @@ static double add_precision_to_dvd_time(demuxer_t *demuxer) {
  */
 double demuxer_get_current_time(demuxer_t *demuxer)
 {
-    // this method only gets called if EDL or OSD is on
+    // this method only gets called if EDL or OSD is on, otherwise it just outputs the mpeg time to the console, and doesn't call it.
+    // currently it translates the DVD "get time" output to
+    // a time that matches "mplayers V:" output as if no splits had occurred
+    // which is...actually equal to file time I can hope.
     double get_time_ans = 0;
     sh_video_t *sh_video = demuxer->video->sh;
     if (demuxer->stream_pts != MP_NOPTS_VALUE)
 	{
 	   get_time_ans = add_precision_to_dvd_time(demuxer);
-       get_time_ans *= 1.001; // convert to 29.97 fps, mplayer's golden standard :P // could do this within libdvdnav uh guess...possibly all of it...	   
+       get_time_ans *= 1.001; // convert to 29.97 fps, mplayer's golden standard :P
 	}
     else if (sh_video) {
         get_time_ans = sh_video->pts;
