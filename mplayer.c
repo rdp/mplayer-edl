@@ -144,7 +144,7 @@ int quiet;
 int enable_mouse_movements;
 float start_volume = -1;
 double start_pts   = MP_NOPTS_VALUE;
-extern float osd_add_this_much;
+
 char *heartbeat_cmd;
 static int max_framesize;
 
@@ -1593,7 +1593,7 @@ static void update_osd_msg(void)
 			if(mpctx->demuxer->stream_pts != MP_NOPTS_VALUE) {
 			  // DVD
 			  if(pts == mpctx->sh_video->pts + osd_add_this_much) {
-			    snprintf(osd_accuracy_level, 100, "EDL-high-DVD-accurate");
+			    snprintf(osd_accuracy_level, 100, "EDL-high-DVD-accurate"); // used the mpeg stamp itself...hmm...never expect to see this...
 			  } else {
 			    if(osd_add_this_much > 0) {
 			      snprintf(osd_accuracy_level, 100, "EDL-med-DVD-accurate");

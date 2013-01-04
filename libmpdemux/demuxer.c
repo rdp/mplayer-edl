@@ -1479,6 +1479,7 @@ int osd_verbose = 0;
 double last_dvd_update_pos = 0;
 double last_stream_pos_at_that_dvd_time = 0;
 float osd_add_this_much = 0.0;
+float osd_subtract_this_much = 0.0;
 
 static double add_precision_to_dvd_time(demuxer_t *demuxer) {	 
    double get_time_ans = demuxer->stream_pts;  
@@ -1538,8 +1539,8 @@ double demuxer_get_current_time(demuxer_t *demuxer)
 	// now morph it to "match" MPEG DVD stream times LOL
 	if(osd_verbose)
       printf("adding %f to pts %f\n", osd_add_this_much, get_time_ans);
- 
     get_time_ans += osd_add_this_much;
+ 
     if(osd_verbose)
        printf("final: %f\n", get_time_ans);
 	   
@@ -1548,6 +1549,10 @@ double demuxer_get_current_time(demuxer_t *demuxer)
                  printf("using mpeg ts appears larger, which if true is definitely better %f > %f - 1.0\n", sh_video->pts, get_time_ans);
 			get_time_ans = sh_video->pts;
 	}
+	
+	if(osd_verbose)
+      printf("subtracting %f from pts, to match file time presumably %f\n", osd_subtract_this_much, get_time_ans);
+    get_time_ans -= osd_subtract_this_much;	  
     
     return get_time_ans;
 }

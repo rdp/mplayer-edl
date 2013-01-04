@@ -234,9 +234,9 @@ const m_option_t mplayer_opts[]={
     {"crash-debug", &crash_debug, CONF_TYPE_FLAG, CONF_GLOBAL, 0, 1, NULL},
     {"nocrash-debug", &crash_debug, CONF_TYPE_FLAG, CONF_GLOBAL, 1, 0, NULL},
 #endif
-//    {"osd-add-this-much", &osd_add_this_much, CONF_TYPE_FLOAT, CONF_RANGE, 0, 10000, NULL},
     {"osdlevel", &osd_level, CONF_TYPE_INT, CONF_RANGE, 0, 3, NULL},
     {"osd-add", &osd_add_this_much, CONF_TYPE_FLOAT, CONF_RANGE, -100.0, 100.0, NULL},
+    {"osd-subtract", &osd_subtract_this_much, CONF_TYPE_FLOAT, CONF_RANGE, -100.0, 100.0, NULL},
     {"osd-verbose", &osd_verbose,  CONF_TYPE_FLAG, CONF_GLOBAL, 0, 1, NULL},
     
     {"osd-duration", &osd_duration, CONF_TYPE_INT, CONF_MIN, 0, 0, NULL},
