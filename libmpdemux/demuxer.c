@@ -1521,7 +1521,7 @@ double demuxer_get_current_time(demuxer_t *demuxer)
     // this method only gets called if EDL or OSD is on, otherwise it just outputs the mpeg time to the console, and doesn't call it.
     // currently it translates the DVD "get time" output to
     // a time that matches "mplayers V:" output as if no splits had occurred
-    // which is...actually equal to file time I can hope.
+    // which is...close to the "ripped" file time, but still (MPEG starts at 0.28) ahead of it.
     double get_time_ans = 0;
     sh_video_t *sh_video = demuxer->video->sh;
     if (demuxer->stream_pts != MP_NOPTS_VALUE)
