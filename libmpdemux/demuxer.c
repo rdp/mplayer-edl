@@ -1527,7 +1527,7 @@ double demuxer_get_current_time(demuxer_t *demuxer)
     if (demuxer->stream_pts != MP_NOPTS_VALUE)
 	{
 	   get_time_ans = add_precision_to_dvd_time(demuxer);
-       get_time_ans *= 1.001; // convert to 29.97 fps, mplayer's golden standard :P
+       get_time_ans *= 1.001; // convert from NAV to actual 29.97 (basically * 30/29.97) fps, mplayer (the MPEG's actual underlying stream's) 's golden standard :P
 	}
     else if (sh_video) {
         get_time_ans = sh_video->pts;
