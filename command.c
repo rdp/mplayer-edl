@@ -433,7 +433,7 @@ static int mp_property_time_pos(m_option_t *prop, int action,
         return M_PROPERTY_OK;
     case M_PROPERTY_STEP_UP:
     case M_PROPERTY_STEP_DOWN:
-        rel_seek_secs += (arg ? *(double*)arg : 10.0) *
+	    rel_seek_secs += (arg ? *(double*)arg : 10.0) *
             (action == M_PROPERTY_STEP_UP ? 1.0 : -1.0);
         return M_PROPERTY_OK;
     }
@@ -2592,7 +2592,7 @@ int run_command(MPContext *mpctx, mp_cmd_t *cmd)
                         mpctx->osd_function = OSD_FFW;  // Direction isn't set correctly
                     rel_seek_secs = v / 100.0;
                 } else {
-                    rel_seek_secs += v;
+                    rel_seek_secs += v/2; // hacky, hacky seek 5 seconds yikezers!
                     mpctx->osd_function = (v > 0) ? OSD_FFW : OSD_REW;
                 }
                 brk_cmd = 1;
