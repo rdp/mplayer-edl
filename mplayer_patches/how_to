@@ -8,17 +8,17 @@ to
 /opt/rdp_project_local/etc/macports/sources.conf
 # ref: http://guide.macports.org/#development.local-repositories
 
-$ portindex # doesn't need sudo
+$ portindex # doesn't need sudo ?
 
-this basically collides with mplayer, I guess [without any way around that?] so you cannot install this and any other mplayer port
-at the same time
+this package basically collides with the standard mplayer package, I guess [without any way around that?] 
+so you cannot install this and any other mplayer port at the same time
 
 $ export PATH=/opt/rdp_project_local/bin:$PATH
-$ sudo port -kd install mplayer-edl
+$ sudo port  install mplayer-edl # add -kd for extra debug, add -f if it complains of "already activated files" for dependencies when you do this
 $ port mdmg rdp-projects 
 
 # and distribute to https://sourceforge.net/projects/mplayer-edl/files/mac-dependencies/
 
-# to build home macports: ./configure --prefix=/opt/rdp_project_local --with-applications-dir=/Applications/rdp_projects
+# to build macports initially: ./configure --prefix=/opt/rdp_project_local --with-applications-dir=/Applications/rdp_projects
 # then run port sync
 
