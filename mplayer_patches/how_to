@@ -18,7 +18,7 @@ so you cannot install this and any other mplayer port at the same time
 $ export PATH=/opt/rdp_project_local/bin:$PATH
 $ sudo port  install mplayer-edl # add -kd for extra debug, add -f if it complains of "already activated files" for dependencies when you do this
 $ sudo port mdmg rdp-projects 
-or maybe $ sudo port mdmg mplayer-edl ?
+or maybe $ sudo port mdmg mplayer-edl ? except that wouldn't include ffmpeg, which we need/like...
 
 # and distribute to https://sourceforge.net/projects/mplayer-edl/files/mac-dependencies/
 
