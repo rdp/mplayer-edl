@@ -5,9 +5,11 @@
 
 PortSystem          1.0
 
+# remember to bump the version here as well as in the other Portfile
+
 name                mplayer-edl
 version             0 
-revision            4
+revision            6
 categories          multimedia
 maintainers         rdp
 platforms           darwin

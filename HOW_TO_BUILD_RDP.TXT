@@ -1,3 +1,5 @@
+for mac see mplayer_patches subdir
+
 git submodule update --init
 
 ./configure  --enable-iconv --enable-freetype --enable-static --enable-fontconfig --enable-runtime-cpudetection --enable-debug && make -j 2
