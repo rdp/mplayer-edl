@@ -80,7 +80,9 @@ configure.args-append \
     --disable-caca --disable-x11 --disable-gl --disable-arts \
     --disable-esd --disable-lirc --disable-mng --disable-libdirac-lavc \
     --disable-libschroedinger-lavc --disable-liba52  \
-    --disable-gif
+    --disable-gif\
+    --disable-xss
+
 
 patchfiles configure.x11.patch
 
