@@ -1,4 +1,4 @@
-for mac see mplayer_patches subdir
+for mac see patches_mplayer subdir
 
 git submodule update --init
 
