@@ -19,6 +19,7 @@ $ export PATH=/opt/rdp_project_local/bin:$PATH
 $ sudo port  install mplayer-edl # add -kd for extra debug, add -f if it complains of "already activated files" for dependencies when you do this
 $ sudo port clean perl5 ffmpeg xorg-xcb-proto xorg-libxcb mplayer-edl # workaround a macports bug, reported...
 # may need to delete old .dmg and .mpkg first if one already exists
+# maybe change variants.conf to +universal first? enable ppc ppc64 as well in macports.conf?
 $ sudo nice port mdmg rdp-projects # so that it'll include ffmpeg...I guess we use it for files still :)
 
 This creates something like:
