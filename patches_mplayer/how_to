@@ -26,7 +26,8 @@ $ sudo port clean perl5 ffmpeg xorg-xcb-proto xorg-libxcb mplayer-edl # workarou
 # maybe change variants.conf to +universal first? enable ppc ppc64 as well in macports.conf? ppc64 smells broken...
 $ sudo nice port mdmg rdp-projects # so that it'll include ffmpeg...I guess we use it for files still :)
 $ sudo port uninstall mplayer-edl
-$ sudo nice port mdmg rdp-projects-i386 # so that it'll include ffmpeg...I guess we use it for files still :)
+$ do the clean again...I guess?
+$ sudo nice port mdmg rdp-projects-i386 # i386 version...
 
 This creates something like:
 /opt/rdp_project_local/var/macports/build/_Users_rogerdpack_dev_mplayer-svn_patches_mplayer_port_dir_multimedia_rdp-projects/rdp-projects/work/rdp-projects-0-6.dmg
