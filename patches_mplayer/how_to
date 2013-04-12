@@ -9,7 +9,9 @@ to
 
 # ref: http://guide.macports.org/#development.local-repositories
 
-$ portindex # doesn't even need sudo ?
+# if you ever change versions, also do this again:
+$ cd port_dir
+$ portindex
 
 You may want to bump some version numbers in Portfile files also...
 
