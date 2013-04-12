@@ -24,17 +24,6 @@ depends_lib port:ffmpeg port:gocr port:ImageMagick port:mplayer-edl-i386
 
 worksrcdir          trunk
 
-# Do not use the following environment variables, otherwise the build phase
-# will fail.
-configure.cflags    {}
-configure.cppflags  {}
-configure.cxxflags  {}
-configure.ldflags   {}
-configure.cc_archflags  {}
-configure.cxx_archflags {}
-
-# Do not use pipes, otherwise the build phase will fail.
-configure.pipe      no
 fetch.type	svn
 fetch {
   system "git clone https://github.com/rdp/blank_c_project ${worksrcpath}"
