@@ -83,10 +83,6 @@ configure.args-append \
     --disable-gif\
     --disable-xss
 
-# +universal adds this by default for some reason, remove it.
-configure.universal_args-delete --disable-dependency-tracking 
-
-
 patchfiles configure.x11.patch
 
 post-destroot {

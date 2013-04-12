@@ -62,7 +62,7 @@ configure.args \
     --confdir=${prefix}/etc/${name} \
     --mandir=${prefix}/share/man \
     --enable-png --enable-jpeg --enable-liblzo \
-    --enable-theora --enable-libvorbis --enable-mad
+    --enable-theora --enable-libvorbis --enable-mad --disable-quartz
 
 # MPlayer autodetects many support libs.  To prevent undeclared
 # dependencies, explicitly disable everything optional first.
@@ -81,10 +81,6 @@ configure.args-append \
     --disable-libschroedinger-lavc --disable-liba52  \
     --disable-gif\
     --disable-xss
-
-# +universal adds this by default for some reason, remove it.
-configure.universal_args-delete --disable-dependency-tracking 
-
 
 patchfiles configure.x11.patch
 
