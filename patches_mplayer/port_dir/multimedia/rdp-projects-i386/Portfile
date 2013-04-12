@@ -5,7 +5,7 @@
 
 PortSystem          1.0
 
-name                rdp-projects
+name                rdp-projects-i386
 version             0
 revision            6
 categories          multimedia
@@ -13,7 +13,7 @@ maintainers         rdp
 platforms           darwin
 license             GPL-2
 
-description         Sensible Cinema GPL'ed dependencies.
+description         Sensible Cinema GPL'ed dependencies, for slightly older macs (core duo) that are 32 bit not 64.
 long_description    ${description} 
 
 homepage            http://rogerdpack.t28.net
