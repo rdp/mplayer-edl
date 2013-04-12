@@ -5,15 +5,16 @@
 
 PortSystem          1.0
 
-# remember to bump the version here as well as in the other Portfile
 
 name                mplayer-edl
+# remember to bump the version here as well as in the other Portfiles, really...I guess...
 version             0.6
 revision            3
 categories          multimedia
 maintainers         rdp
 platforms           darwin
 license             GPL-2
+conflicts           mplayer-devel MPlayer
 
 description         The MPlayer movie player built from SVN, with EDL luv.
 long_description    ${description} It plays most MPEG/VOB, AVI, Ogg/OGM, \
@@ -63,7 +64,8 @@ configure.args \
     --confdir=${prefix}/etc/${name} \
     --mandir=${prefix}/share/man \
     --enable-png --enable-jpeg --enable-liblzo \
-    --enable-theora --enable-libvorbis --enable-mad
+    --enable-theora --enable-libvorbis --enable-mad\
+     --enable-runtime-cpudetection
 
 # MPlayer autodetects many support libs.  To prevent undeclared
 # dependencies, explicitly disable everything optional first.

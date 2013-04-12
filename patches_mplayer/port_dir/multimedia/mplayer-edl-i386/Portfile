@@ -13,8 +13,9 @@ categories          multimedia
 maintainers         rdp
 platforms           darwin
 license             GPL-2
+conflicts           mplayer-edl mplayer-devel MPlayer
 
-description         The MPlayer movie player built from SVN, with EDL luv.
+description         The MPlayer movie player built from SVN, with EDL luv. for i386 cpu's
 long_description    ${description} It plays most MPEG/VOB, AVI, Ogg/OGM, \
                     VIVO, ASF/WMA/WMV, QT/MOV/MP4, RealMedia, Matroska, \
                     NUT, NuppelVideo, FLI, YUV4MPEG, FILM, RoQ, PVA files, \
@@ -44,13 +45,13 @@ post-fetch {
 }
 
 # Do not use the following environment variables, otherwise the build phase
-# will fail.
-configure.cflags    {}
-configure.cppflags  {}
-configure.cxxflags  {}
-configure.ldflags   {}
-configure.cc_archflags  {}
-configure.cxx_archflags {}
+# will fail.  Huh?
+#configure.cflags    {}
+#configure.cppflags  {}
+#configure.cxxflags  {}
+#configure.ldflags   {}
+#configure.cc_archflags  {}
+#configure.cxx_archflags {}
 
 # Do not use pipes, otherwise the build phase will fail.
 configure.pipe      no
@@ -62,7 +63,8 @@ configure.args \
     --confdir=${prefix}/etc/${name} \
     --mandir=${prefix}/share/man \
     --enable-png --enable-jpeg --enable-liblzo \
-    --enable-theora --enable-libvorbis --enable-mad --disable-quartz
+    --enable-theora --enable-libvorbis --enable-mad \
+    --disable-quartz --enable-runtime-cpudetection
 
 # MPlayer autodetects many support libs.  To prevent undeclared
 # dependencies, explicitly disable everything optional first.
