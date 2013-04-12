@@ -6,8 +6,8 @@
 PortSystem          1.0
 
 name                rdp-projects
-version             0
-revision            6
+version             0.6
+revision            3
 categories          multimedia
 maintainers         rdp
 platforms           darwin
