@@ -53,6 +53,10 @@ post-fetch {
 #configure.cc_archflags  {}
 #configure.cxx_archflags {}
 
+# attempt to enable mmx for ffmpeg. didn't seem to help...
+#configure.cflags-append -march=core2
+#configure.cxxflags-append -march=core2
+
 # Do not use pipes, otherwise the build phase will fail.
 configure.pipe      no
 
@@ -64,7 +68,8 @@ configure.args \
     --mandir=${prefix}/share/man \
     --enable-png --enable-jpeg --enable-liblzo \
     --enable-theora --enable-libvorbis --enable-mad \
-    --disable-quartz --enable-runtime-cpudetection
+    --disable-quartz --enable-runtime-cpudetection \
+    --enable-mmx --enable-sse --enable-sse2 --enable-mmx2 --enable-sse3 # attempt enable mmx for ffmpeg...
 
 # MPlayer autodetects many support libs.  To prevent undeclared
 # dependencies, explicitly disable everything optional first.
