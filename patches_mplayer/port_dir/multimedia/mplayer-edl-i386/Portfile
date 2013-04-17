@@ -60,6 +60,8 @@ post-fetch {
 # Do not use pipes, otherwise the build phase will fail.
 configure.pipe      no
 
+# attempt enable mmx for ffmpeg...
+
 configure.args \
     --extra-cflags="-I${prefix}/include/lzo -I${prefix}/include" \
     --extra-ldflags="-L${prefix}/lib -L${prefix}/lib/samba3" \
@@ -69,7 +71,7 @@ configure.args \
     --enable-png --enable-jpeg --enable-liblzo \
     --enable-theora --enable-libvorbis --enable-mad \
     --disable-quartz --enable-runtime-cpudetection \
-    --enable-mmx --enable-sse --enable-sse2 --enable-mmx2 --enable-sse3 # attempt enable mmx for ffmpeg...
+    --disable-mmx --disable-sse --disable-sse2 --disable-mmxext
 
 # MPlayer autodetects many support libs.  To prevent undeclared
 # dependencies, explicitly disable everything optional first.
@@ -90,6 +92,11 @@ configure.args-append \
     --disable-xss
 
 patchfiles configure.x11.patch
+
+post-configure {
+  # possibly i386+ffmpeg+mac version of gcc bug 
+  system "cd ${worksrcpath} && sed -i -e 's/HAVE_EBX_AVAILABLE 1/HAVE_EBX_AVAILABLE 0/' config.h"
+}
 
 post-destroot {
     xinstall -d -m 0755 ${destroot}${prefix}/share/doc/${name}
