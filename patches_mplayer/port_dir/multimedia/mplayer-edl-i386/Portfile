@@ -89,7 +89,7 @@ configure.args-append \
     --disable-esd --disable-lirc --disable-mng --disable-libdirac-lavc \
     --disable-libschroedinger-lavc --disable-liba52  \
     --disable-gif\
-    --disable-xss
+    --disable-xss --disable-jpeg --disable-png --disable-liblzo --disable-mad --disable-theora --disable-libvorbis
 
 patchfiles configure.x11.patch
 
