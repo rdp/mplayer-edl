@@ -5,6 +5,7 @@
 
 PortSystem          1.0
 
+supported_archs x86_64
 
 name                mplayer-edl
 # remember to bump the version here as well as in the other Portfiles, really...I guess...
