@@ -3,7 +3,7 @@ for mac see patches_mplayer subdir
 git submodule update --init
 
 ./configure  --enable-iconv --enable-freetype --enable-static --enable-fontconfig --enable-runtime-cpudetection --enable-debug && make -j 2
-add -liconv  -lfontconfig -lexpat -lfreetype to config.mak
+add -liconv  -lfontconfig -lexpat -lfreetype to config.mak EXTRALIBS
 
 after building ffmpeg, comment out in Makefile (may not have to):
 
