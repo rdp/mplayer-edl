@@ -3,9 +3,12 @@ howto:
 probably fix up your path to make sure it's using the right "port..." first...
 
 add
-file:///Users/rogerdpack/dev/mplayer-svn/patches_mplayer/port_dir
+file:///Users/rogerdpack/dev/mplayer-svn/patches_mplayer/port_dir # note the file://
 to this file
 /opt/rdp_project_local/etc/macports/sources.conf
+
+then cd to port_dir, run `portindex` then
+$ sudo port install mplayer-edl
 
 # ref: http://guide.macports.org/#development.local-repositories
 
